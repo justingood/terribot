@@ -1,4 +1,4 @@
 terribot
 ========
 
-A terrible Telegram robot.
+A terrible Telegram chat robot.
