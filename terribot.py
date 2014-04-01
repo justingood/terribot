@@ -27,7 +27,7 @@ def command_parser(chat_group, tg):
             msg = (yield)
             # Only process if the group name match
             #print msg
-            if msg['gid'] == chat_group:
+            if msg['gid'] == chat_group and msg['gid'] != os.getenv('TELEGRAM_BOTID'):
                 result = magic.do(msg)
                 tg.msg(msg['cmdgroup'], result)
     except GeneratorExit:
@@ -43,6 +43,9 @@ if __name__ == '__main__':
     pubkey = os.getenv('TELEGRAM_PUBKEY')
     if pubkey is None:
       print "You need to set the TELEGRAM_PUBKEY environment variable"
+      sys.exit()
+    if os.getenv('TELEGRAM_BOTID') is None:
+      print "You need to set the TELEGRAM_BOTID environment variable"
       sys.exit()
     tg = pytg.Telegram(telegram, pubkey)
 

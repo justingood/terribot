@@ -13,6 +13,8 @@ from pytg.tg import (
     )
 
 def do(msg):
+  print msg
+  print ""
   if re.match('ping' ,msg['message']) is not None:
     return 'pong'
   else:
