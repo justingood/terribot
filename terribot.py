@@ -62,12 +62,14 @@ if __name__ == '__main__':
 
     # Start telegram cli
     tg.start()
-    while True:
-        # Keep on polling so that messages will pass through our pipeline
-        tg.poll()
+    try:
+	while True:
+            # Keep on polling so that messages will pass through our pipeline
+            tg.poll()
 
-        if QUIT == True:
-            break
-
+            if QUIT == True:
+                break
+    except KeyboardInterrupt:
+        print "\nCuriously enough, the only thing that went through the mind of the bowl of petunias as it fell was Oh no, not again."
     # Quit gracefully
     tg.quit()
