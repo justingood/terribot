@@ -8,6 +8,9 @@ import sys
 import re
 import pytg
 import urllib2
+import random
+
+colinChoice = ['Who\'s this Colin person you guys keep talking about?', 'Colin? Who\'s that?', 'What\'s a Colin?', 'You guys keep saying that name...', 'I have no idea who you\'re talking about.', '', '', '']
 
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
@@ -25,6 +28,9 @@ def do(msg):
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(urllib2.urlopen(msg['message']))
         return soup.title.string.replace(" - YouTube","")
+    # Colin
+    elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
+        return random.choice(colinChoice)
     # Ignore everything else
     else:
         return ''
