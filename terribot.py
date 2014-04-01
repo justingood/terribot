@@ -5,12 +5,14 @@ A terrible Telegram bot. NOT Three-Law compatible.
 """
 
 import sys
+import os
 from datetime import datetime, timedelta
 import pytg
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
     dialog_list, chat_info, message, user_status,
 )
+import magic
 
 QUIT = False
 
@@ -24,23 +26,10 @@ def command_parser(chat_group, tg):
         while True:
             msg = (yield)
             # Only process if the group name match
-            print msg
+            #print msg
             if msg['gid'] == chat_group:
-                cmd = msg['message'].strip().split(' ')
-                if len(cmd) == 1:
-                    # ping command
-                    if cmd[0].lower() == 'ping':
-                        now = datetime.now()
-                        # simple ping flood control
-                        if not last_ping or (now - last_ping) >= mydelta:
-                            last_ping = now
-                            # Send pong respond to this chat group
-                            tg.msg(msg['cmdgroup'], 'pong')
-                    # quit command
-                    elif cmd[0].lower() == 'quit':
-                        if msg['uid'] == '17696710': # Put your user id here
-                            tg.msg(msg['cmdgroup'], 'By your command')
-                            QUIT = True
+                magic.do(msg)
+
     except GeneratorExit:
         pass
 
@@ -53,9 +42,13 @@ if __name__ == '__main__':
 
     # Create processing pipeline
     # Bot will respond to command the posted in this chat group
-    whichgroup = os.getenv('TELEGRAM_ENV', 'DEVELOPMENT' )
-
-    grpuid = os.getenv('TELEGRAM_ENV', 'DEVELOPMENT' )
+    whichenv = os.getenv('TELEGRAM_ENV', 'DEVELOPMENT' )
+    if whichenv == 'PRODUCTION':
+        grpuid = os.getenv('PRODROOM')
+    elif whichenv == 'QA':
+        grpuid = os.getenv('QAROOM')
+    else:
+        grpuid = os.getenv('DEVROOM')
     pipeline = message(command_parser(grpuid, tg))
 
     # Register our processing pipeline
