@@ -42,13 +42,7 @@ if __name__ == '__main__':
 
     # Create processing pipeline
     # Bot will respond to command the posted in this chat group
-    whichenv = os.getenv('TELEGRAM_ENV', 'DEVELOPMENT' )
-    if whichenv == 'PRODUCTION':
-        grpuid = os.getenv('PRODROOM')
-    elif whichenv == 'QA':
-        grpuid = os.getenv('QAROOM')
-    else:
-        grpuid = os.getenv('DEVROOM')
+    grpuid = os.getenv('TELEGRAM_ROOM')
     pipeline = message(command_parser(grpuid, tg))
 
     # Register our processing pipeline
