@@ -37,12 +37,21 @@ def command_parser(chat_group, tg):
 if __name__ == '__main__':
     # Instantiate Telegram class
     telegram = os.getenv('TELEGRAM_BINARY')
+    if telegram is None:
+      print "You need to set the TELEGRAM_BINARY environment variable"
+      sys.exit()
     pubkey = os.getenv('TELEGRAM_PUBKEY')
+    if pubkey is None:
+      print "You need to set the TELEGRAM_PUBKEY environment variable"
+      sys.exit()
     tg = pytg.Telegram(telegram, pubkey)
 
     # Create processing pipeline
     # Bot will respond to command the posted in this chat group
     grpuid = os.getenv('TELEGRAM_ROOM')
+    if grpuid is None:
+      print "You need to set the TELEGRAM_ROOM environment variable"
+      sys.exit()
     pipeline = message(command_parser(grpuid, tg))
 
     # Register our processing pipeline
