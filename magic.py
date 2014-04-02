@@ -9,6 +9,7 @@ import re
 import pytg
 import urllib2
 import random
+from bs4 import BeautifulSoup
 
 colinChoice = ['Who\'s this Colin person you guys keep talking about?', 'Colin? Who\'s that?', 'What\'s a Colin?', 'You guys keep saying that name...', 'I have no idea who you\'re talking about.', '', '', '']
 
@@ -25,7 +26,6 @@ def do(msg):
         return 'pong'
     # Youtube Title Lookup
     elif re.search('youtube.com' ,msg['message']) or re.search('youtu.be' ,msg['message']) is not None:
-        from bs4 import BeautifulSoup
         soup = BeautifulSoup(urllib2.urlopen(msg['message']))
         return soup.title.string.replace(" - YouTube","")
     # Colin
