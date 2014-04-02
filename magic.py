@@ -9,6 +9,7 @@ import re
 import pytg
 import urllib2
 import random
+import json, requests
 from bs4 import BeautifulSoup
 
 colinChoice = ['Who\'s this Colin person you guys keep talking about?', 'Colin? Who\'s that?', 'What\'s a Colin?', 'You guys keep saying that name...', 'I have no idea who you\'re talking about.', 'Stop making up imaginary poeple.', 'This Colin guy sounds as imaginary as human free will', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
@@ -34,6 +35,9 @@ def do(msg):
             return titlestring.replace(" - YouTube","")
         else:
             return titlestring
+    # Cat facts
+    elif re.search('(cat.?facts)|(catfax)', msg['message']) is not None:
+        return json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0]
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return random.choice(colinChoice)
