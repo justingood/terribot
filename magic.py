@@ -36,7 +36,7 @@ def do(msg):
         else:
             return titlestring
     # Cat facts
-    elif re.search('(cat.?facts)|(catfax)', msg['message']) is not None:
+    elif re.search('(cat.?facts)|(catfax)', msg['message'], re.IGNORECASE) is not None:
         return json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0]
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
