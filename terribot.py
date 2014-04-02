@@ -29,6 +29,7 @@ def command_parser(chat_group, tg):
             # Only process if the group name match
             #print msg
             if msg['gid'] == chat_group and msg['gid'] != os.getenv('TELEGRAM_BOTID'):
+	    	print msg
                 result = magic.do(msg)
                 tg.msg(msg['cmdgroup'], result)
     except GeneratorExit:
