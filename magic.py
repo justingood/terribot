@@ -27,8 +27,7 @@ def do(msg):
     # URL Title Lookup
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
-        from bs4 import BeautifulSoup
-        soup = BeautifulSoup(urllib2.urlopen(match.group("url")))
+        soup = BeautifulSoup(urllib2.urlopen(match.group("url").replace(",","")))
         titlestring = soup.title.string.encode('utf-8', 'ignore')
         if re.search(" - YouTube", titlestring) is not None:
             return titlestring.replace(" - YouTube","")
