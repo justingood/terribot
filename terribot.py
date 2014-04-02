@@ -27,7 +27,7 @@ def command_parser(chat_group, tg):
         while True:
             msg = (yield)
             # Only process if the group name match
-            #print msg
+            print msg
             if msg['gid'] == chat_group and msg['gid'] != os.getenv('TELEGRAM_BOTID'):
 	    	print msg
                 result = magic.do(msg)
