@@ -23,6 +23,7 @@ def command_parser(chat_group, tg):
     last_ping = None
     # To avoid ping flood attack, we'll respond to ping once every 10 sec
     mydelta = timedelta(seconds=10)
+    print "Ready and awaiting orders.\n\n"
     try:
         while True:
             msg = (yield)
