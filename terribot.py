@@ -6,6 +6,7 @@ A terrible Telegram bot. NOT Three-Law compatible.
 
 import sys
 import os
+import time
 from datetime import datetime, timedelta
 import pytg
 from pytg.utils import coroutine, broadcast
@@ -64,7 +65,8 @@ if __name__ == '__main__':
     tg.start()
     try:
 	while True:
-            # Keep on polling so that messages will pass through our pipeline
+            # Keep on polling so that messages will pass through our pipeline, but don't peg the CPU
+	    time.sleep(0.0001)
             tg.poll()
 
             if QUIT == True:
