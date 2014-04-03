@@ -46,22 +46,22 @@ def do(msg):
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return random.choice(colinChoice)
     # Urban Dictionary definitions
-    elif (re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):
-        defkeyword = msg['message'].lower()
+    elif (re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define:" is in the message AND message is more than one word.
+        defkeyword = msg['message'].lower()                                 #convert message to lower case
         h = Http()
-        resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(defkeyword.replace("define:","")), "GET")
-        if re.search('no_results', rawcontent) is None:
-            rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ")
+        resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(defkeyword.replace("define:","")), "GET")   #send message to the API, without define keyword
+        if re.search('no_results', rawcontent) is None:                     #if there is a definition for that word
+            rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ") #remove newline and carriage returns
             content = json.loads(rawcontent)
             for item in content['list'][0:1]:
-                definition = item['definition']
+                definition = item['definition']                             #populate some variables
                 permalink = item['permalink']
                 word = item['word']
                 example = item['example']
-                if example:
-                    return str(word + ": " + definition + ".          " + "EXAMPLE: " + example)
+                if example:                                                 #if the definition also has an example then show it
+                    return (word + ": " + definition + ".          " + "EXAMPLE: " + example).encode('utf-8', 'replace')
                 else:
-                    return str(word + ": " + definition)
+                    return (word + ": " + definition).encode('utf-8', 'replace')
         else:
             return "Sorry, but I couldn't find a definition for that word."
 
