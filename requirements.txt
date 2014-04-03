@@ -7,6 +7,4 @@ zope.interface==4.1.1
 beautifulsoup4==4.3.2
 requests==2.2.1
 #For urban dictionary lookup
-argparse==1.1
 httplib2==0.8
-colorama==0.2.7
