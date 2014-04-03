@@ -46,9 +46,10 @@ def do(msg):
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return random.choice(colinChoice)
     # Urban Dictionary definitions
-    elif re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1:
+    elif (re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):
+        defkeyword = msg['message'].lower()
         h = Http()
-        resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(msg['message'].replace("define: ","")), "GET")
+        resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(defkeyword.replace("define:","")), "GET")
         if re.search('no_results', rawcontent) is None:
             rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ")
             content = json.loads(rawcontent)
