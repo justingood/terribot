@@ -12,6 +12,7 @@ import random
 import json, requests
 from bs4 import BeautifulSoup
 from httplib2 import Http
+from datetime import datetime, timedelta
 
 colinChoice = ['Who\'s this Colin person you guys keep talking about?', 'Colin? Who\'s that?', 'What\'s a Colin?', 'You guys keep saying that name...', 'I have no idea who you\'re talking about.', 'Stop making up imaginary poeple.', 'This Colin guy sounds as imaginary as human free will', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
 pingChoice = ['I\'m getting tired of ponging', 'Stop it', 'pong', 'pong', 'pong', 'Do you find this amusing?', 'pong', 'Pong', 'Qbert', 'pong', 'Not right now, I\'ve got a headache.', 'pong', 'pong', 'pong', 'pong', 'pong', 'pong', 'pong']
@@ -24,6 +25,8 @@ from pytg.tg import (
 def do(msg):
     print msg
     print ""
+    last_def = None  # THIS NEEDS TO MOVE TO THE PARENT. Otherwise it just gets reset every time, which is pointless.
+    mydelta = timedelta(seconds=30)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
         return random.choice(pingChoice)
@@ -47,23 +50,27 @@ def do(msg):
         return random.choice(colinChoice)
     # Urban Dictionary definitions
     elif (re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define:" is in the message AND message is more than one word.
-        defkeyword = msg['message'].lower()                                 #convert message to lower case
-        h = Http()
-        resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(defkeyword.replace("define:","")), "GET")   #send message to the API, without define keyword
-        if re.search('no_results', rawcontent) is None:                     #if there is a definition for that word
-            rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ") #remove newline and carriage returns
-            content = json.loads(rawcontent)
-            for item in content['list'][0:1]:
-                definition = item['definition']                             #populate some variables
-                permalink = item['permalink']
-                word = item['word']
-                example = item['example']
-                if example:                                                 #if the definition also has an example then show it
-                    return (word + ": " + definition + ".          " + "EXAMPLE: " + example).encode('utf-8', 'replace')
-                else:
-                    return (word + ": " + definition).encode('utf-8', 'replace')
-        else:
-            return "Sorry, but I couldn't find a definition for that word."
+        now = datetime.now()
+        if not last_def or (now - last_def) >= mydelta:
+            last_def = now
+            print last_def
+            defkeyword = msg['message'].lower()                                 #convert message to lower case
+            h = Http()
+            resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(defkeyword.replace("define:","")), "GET")   #send message to the API, without define keyword
+            if re.search('no_results', rawcontent) is None:                     #if there is a definition for that word
+                rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ") #remove newline and carriage returns
+                content = json.loads(rawcontent)
+                for item in content['list'][0:1]:
+                    definition = item['definition']                             #populate some variables
+                    permalink = item['permalink']
+                    word = item['word']
+                    example = item['example']
+                    if example:                                                 #if the definition also has an example then show it
+                        return (word + ": " + definition + ".          " + "EXAMPLE: " + example).encode('utf-8', 'replace')
+                    else:
+                        return (word + ": " + definition).encode('utf-8', 'replace')
+            else:
+                return "Sorry, but I couldn't find a definition for that word."
 
     # Ignore everything else
     else:
