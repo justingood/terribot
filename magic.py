@@ -38,9 +38,6 @@ def do(msg):
     # Cat facts
     elif re.search('(catfax)|(cat.?facts)', msg['message'], re.IGNORECASE) is not None:
         return json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0]
-    # Cat facts
-    elif re.search('(catfax)|(cat.?facts)', msg['message'], re.IGNORECASE) is None and re.search('facts', msg['message'], re.IGNORECASE) is not None:
-        return 'Not found. How about facts.'
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return random.choice(colinChoice)
