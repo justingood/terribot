@@ -11,6 +11,7 @@ import urllib2
 import random
 import json, requests
 from bs4 import BeautifulSoup
+from httplib2 import Http
 
 colinChoice = ['Who\'s this Colin person you guys keep talking about?', 'Colin? Who\'s that?', 'What\'s a Colin?', 'You guys keep saying that name...', 'I have no idea who you\'re talking about.', 'Stop making up imaginary poeple.', 'This Colin guy sounds as imaginary as human free will', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
 pingChoice = ['I\'m getting tired of ponging', 'Stop it', 'pong', 'pong', 'pong', 'Do you find this amusing?', 'pong', 'Pong', 'Qbert', 'pong', 'Not right now, I\'ve got a headache.', 'pong', 'pong', 'pong', 'pong', 'pong', 'pong', 'pong']
@@ -45,8 +46,23 @@ def do(msg):
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return random.choice(colinChoice)
     # Urban Dictionary definitions
-    elif re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1:
-        return "Definitions are not available yet. Sit tight."
+    elif re.search('define' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1:
+        #return "Definitions are not available yet. Sit tight."
+        h = Http()
+        resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(msg['message'].replace("define: ","")), "GET")
+        if re.search('no_results', rawcontent) is None:
+            content = json.loads(rawcontent)
+            for item in content['list'][0:1]:
+                definition = item['definition'].replace("\r\n"," ")
+                permalink = item['permalink']
+                word = item['word']
+                example = item['example']
+
+                return str(word + ": " + definition + ".          " + "EXAMPLE: " + example)
+                #return str("Link: " + permalink)  #gotta figure out how to return multiple lines
+        else:
+            return "Sorry, but I couldn't find a definition for that word."
+
     # Ignore everything else
     else:
         return ''
