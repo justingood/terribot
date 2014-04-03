@@ -9,7 +9,6 @@ import re
 import pytg
 import urllib2
 import random
-import urbandict
 import json, requests
 from bs4 import BeautifulSoup
 
@@ -45,8 +44,9 @@ def do(msg):
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return random.choice(colinChoice)
+    # Urban Dictionary definitions
     elif re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1:
-        return str(urbandict.main("--define" + msg['message'].replace("define: ","")))
+        return "Definitions are not available yet. Sit tight."
     # Ignore everything else
     else:
         return ''
