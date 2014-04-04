@@ -52,7 +52,7 @@ def do(msg):
     # Urban Dictionary definitions
     elif (re.search('define' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define" is in the message AND message is more than one word.
         defkeyword = str(msg['message']).split(' ', 1)[0]
-        if re.search('define', defkeyword):                                         #if define is the FIRST word, otherwise ignore it (so people can still use "define" in a sentence)
+        if re.search('define', defkeyword, re.IGNORECASE):                                         #if define is the FIRST word, otherwise ignore it (so people can still use "define" in a sentence)
             now = datetime.now()
             if not terribot.last_def or (now - terribot.last_def) >= terribot.mydelta:
                 terribot.last_def = now                                           
