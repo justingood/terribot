@@ -15,8 +15,8 @@ from bs4 import BeautifulSoup
 from httplib2 import Http
 from datetime import datetime, timedelta
 
-colinChoice = ['Who\'s this Colin person you guys keep talking about?', 'Colin? Who\'s that?', 'What\'s a Colin?', 'You guys keep saying that name...', 'I have no idea who you\'re talking about.', 'Stop making up imaginary poeple.', 'This Colin guy sounds as imaginary as human free will', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
-pingChoice = ['I\'m getting tired of ponging', 'Stop it', 'pong', 'pong', 'pong', 'Do you find this amusing?', 'pong', 'Pong', 'Qbert', 'pong', 'Not right now, I\'ve got a headache.', 'pong', 'pong', 'pong', 'pong', 'pong', 'pong', 'pong']
+colinChoice = ['Jub\'f guvf Pbyva crefba lbh thlf xrrc gnyxvat nobhg?', 'Pbyva? Jub\'f gung?', 'Jung\'f n Pbyva?', 'Lbh thlf xrrc fnlvat gung anzr...', 'V unir ab vqrn jub lbh\'er gnyxvat nobhg.', 'Fgbc znxvat hc vzntvanel cbrcyr.', 'Guvf Pbyva thl fbhaqf nf vzntvanel nf uhzna serr jvyy', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
+pingChoice = ['V\'z trggvat gverq bs cbatvat', 'Fgbc vg', 'cbat', 'cbat', 'cbat', 'Qb lbh svaq guvf nzhfvat?', 'cbat', 'Cbat', 'Doreg', 'cbat', 'Abg evtug abj, V\'ir tbg n urnqnpur.', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat']
 
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
@@ -30,7 +30,7 @@ def do(msg):
     terribot.mydelta = timedelta(seconds=30)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
-        return random.choice(pingChoice)
+        return (random.choice(pingChoice)).decode('rot13')
     # URL Title Lookup
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
@@ -48,7 +48,7 @@ def do(msg):
         return str(msg['message'] + "? " + "I can't give you those, unfortunately.")
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
-        return random.choice(colinChoice)
+        return (random.choice(colinChoice)).decode('rot13')
     # Urban Dictionary definitions
     elif (re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define:" is in the message AND message is more than one word.
         now = datetime.now()
