@@ -17,6 +17,8 @@ import magic
 
 QUIT = False
 
+last_def = None
+
 @coroutine
 def command_parser(chat_group, tg):
     global QUIT
