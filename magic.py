@@ -24,9 +24,6 @@ from pytg.tg import (
     )
 
 def do(msg):
-    print msg
-    print ""
-    #terribot.last_def = None  # THIS NEEDS TO MOVE TO THE PARENT. Otherwise it just gets reset every time, which is pointless.
     terribot.mydelta = timedelta(seconds=30)
     # Ping
     if re.match('ping' ,msg['message']) is not None:

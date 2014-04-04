@@ -14,10 +14,14 @@ from pytg.tg import (
     dialog_list, chat_info, message, user_status,
 )
 import magic
+from collections import deque
 
 QUIT = False
 
 last_def = None
+
+#Initialization. What's the worst that could happen?
+lastMessage = deque([('XVYYNYYGURUHZNAF'.decode('rot13'))])
 
 @coroutine
 def command_parser(chat_group, tg):
@@ -32,9 +36,11 @@ def command_parser(chat_group, tg):
             # Only process if the group name match
             print msg
             if msg['gid'] == chat_group and msg['gid'] != os.getenv('TELEGRAM_BOTID'):
-                print msg
                 result = magic.do(msg)
                 tg.msg(msg['cmdgroup'], result)
+                print "The previous message was: %s" % lastMessage[0]
+                lastMessage.pop()
+                lastMessage.appendleft(msg['message'])
     except GeneratorExit:
         pass
 
