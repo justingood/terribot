@@ -5,6 +5,7 @@ A terrible Telegram bot. NOT Three-Law compatible.
 """
 
 import sys
+import terribot
 import re
 import pytg
 import urllib2
@@ -25,8 +26,8 @@ from pytg.tg import (
 def do(msg):
     print msg
     print ""
-    last_def = None  # THIS NEEDS TO MOVE TO THE PARENT. Otherwise it just gets reset every time, which is pointless.
-    mydelta = timedelta(seconds=30)
+    #terribot.last_def = None  # THIS NEEDS TO MOVE TO THE PARENT. Otherwise it just gets reset every time, which is pointless.
+    terribot.mydelta = timedelta(seconds=30)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
         return random.choice(pingChoice)
@@ -51,9 +52,9 @@ def do(msg):
     # Urban Dictionary definitions
     elif (re.search('define:' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define:" is in the message AND message is more than one word.
         now = datetime.now()
-        if not last_def or (now - last_def) >= mydelta:
-            last_def = now
-            print last_def
+        if not terribot.last_def or (now - terribot.last_def) >= terribot.mydelta:
+            terribot.last_def = now
+            print terribot.last_def
             defkeyword = msg['message'].lower()                                 #convert message to lower case
             h = Http()
             resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(defkeyword.replace("define:","")), "GET")   #send message to the API, without define keyword
