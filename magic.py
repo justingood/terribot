@@ -72,6 +72,8 @@ def do(msg):
                         return (word + ": " + definition).encode('utf-8', 'replace')
             else:
                 return "Sorry, but I couldn't find a definition for that word."
+        else:
+            return "Sorry, you'll have to wait ~10 seconds to look up another definition."
 
     # Ignore everything else
     else:
