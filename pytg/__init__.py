@@ -75,6 +75,10 @@ class Telegram(object):
         self.tgin.write(' '.join(['msg', peer, message]) + '\n')
         self.tgin.flush()
 
+    def send_photo(self, peer, path):
+        self.tgin.write(' '.join(['send_photo', peer, path]) + '\n')
+	self.tgin.flush()
+
     def dialog_list(self):
         self.tgin.write('dialog_list\n')
         self.tgin.flush()
