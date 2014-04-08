@@ -17,6 +17,7 @@ import magic
 from collections import deque
 
 QUIT = False
+DEBUG = False
 
 last_def = None
 
@@ -35,7 +36,7 @@ def command_parser(chat_group, tg):
             msg = (yield)
             # Only process if the group name match
             print msg
-            if msg['gid'] == chat_group and msg['gid'] != os.getenv('TELEGRAM_BOTID'):
+            if msg['gid'] == chat_group and msg['gid'] != botid:
                 result = magic.do(msg)
                 tg.msg(msg['cmdgroup'], result)
                 print "The previous message was: %s" % lastMessage[0]
@@ -46,26 +47,26 @@ def command_parser(chat_group, tg):
 
 
 if __name__ == '__main__':
-    # Instantiate Telegram class
-    telegram = os.getenv('TELEGRAM_BINARY')
-    if telegram is None:
-      print "You need to set the TELEGRAM_BINARY environment variable"
-      sys.exit()
-    pubkey = os.getenv('TELEGRAM_PUBKEY')
-    if pubkey is None:
-      print "You need to set the TELEGRAM_PUBKEY environment variable"
-      sys.exit()
-    if os.getenv('TELEGRAM_BOTID') is None:
-      print "You need to set the TELEGRAM_BOTID environment variable"
-      sys.exit()
-    tg = pytg.Telegram(telegram, pubkey)
+    if os.getenv('TELEGRAM_DIR') is None:
+        print "You must set the TELEGRAM_DIR environment variable."
+        sys.exit()
+    else:
+        telegram = os.getenv('TELEGRAM_DIR').rstrip("/") + "/telegram"
+        pubkey = os.getenv('TELEGRAM_DIR').rstrip("/") + "/tg.pub"
 
-    # Create processing pipeline
-    # Bot will respond to command the posted in this chat group
-    grpuid = os.getenv('TELEGRAM_ROOM')
-    if grpuid is None:
-      print "You need to set the TELEGRAM_ROOM environment variable"
-      sys.exit()
+    if os.getenv('TELEGRAM_BOTID') is None:
+        print "You need to set the TELEGRAM_BOTID environment variable"
+        sys.exit()
+    else:
+        botid = os.getenv('TELEGRAM_BOTID')
+
+    if os.getenv('TELEGRAM_ROOM') is None:
+        print "You need to set the TELEGRAM_ROOM environment variable"
+        sys.exit()
+    else:
+        grpuid = os.getenv('TELEGRAM_ROOM')
+        
+    tg = pytg.Telegram(telegram, pubkey)
     pipeline = message(command_parser(grpuid, tg))
 
     # Register our processing pipeline
