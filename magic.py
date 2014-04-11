@@ -28,28 +28,28 @@ def do(msg):
     terribot.mydelta = timedelta(seconds=30)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
-        return (random.choice(pingChoice)).decode('rot13')
+        return 'msg', (random.choice(pingChoice)).decode('rot13')
     # URL Title Lookup
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
         soup = BeautifulSoup(urllib2.urlopen(match.group("url").replace(",","")))
         titlestring = soup.title.string.encode('utf-8', 'ignore')
         if re.search(" - YouTube", titlestring) is not None:
-            return titlestring.replace(" - YouTube","")
+            return 'msg', titlestring.replace(" - YouTube","")
         else:
-            return titlestring
+            return 'msg', titlestring
     # Cat facts
     elif re.search('(catfax)|(cat.?facts)', msg['message'], re.IGNORECASE) is not None:
-        return json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0]
+        return 'msg', json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0]
     # Not cat facts
     elif re.search('facts', msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) == 2:
-        return str(msg['message'] + "? " + "I can't give you those, unfortunately.")
+        return 'msg', str(msg['message'] + "? " + "I can't give you those, unfortunately.")
     # 8 Ball
     elif re.search('8.*ball.*\?' ,msg['message'], re.IGNORECASE) is not None:
-        return (random.choice(eightBallChoice)).decode('rot13')
+        return 'msg', (random.choice(eightBallChoice)).decode('rot13')
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
-        return (random.choice(colinChoice)).decode('rot13')
+        return 'msg', (random.choice(colinChoice)).decode('rot13')
     # Urban Dictionary definitions
     elif (re.search('define' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define" is in the message AND message is more than one word.
         defkeyword = str(msg['message']).split(' ', 1)[0]
@@ -68,16 +68,16 @@ def do(msg):
                         word = item['word']
                         example = item['example']
                         if example:                                                 #if the definition also has an example then show it
-                            return (word + ": " + definition + ".          " + "EXAMPLE: " + example).encode('utf-8', 'replace')
+                            return 'msg', (word + ": " + definition + ".          " + "EXAMPLE: " + example).encode('utf-8', 'replace')
                         else:
-                            return (word + ": " + definition).encode('utf-8', 'replace')
+                            return 'msg', (word + ": " + definition).encode('utf-8', 'replace')
                 else:
-                    return "Sorry, but I couldn't find a definition for that word."
+                    return 'msg', "Sorry, but I couldn't find a definition for that word."
             else:
-                return "Sorry, you'll have to wait ~10 seconds to look up another definition."
+                return 'msg', "Sorry, you'll have to wait ~10 seconds to look up another definition."
         else:
-                return ''
+                return 'msg', ''
 
     # Ignore everything else
     else:
-        return ''
+        return 'msg', ''

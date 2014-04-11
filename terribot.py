@@ -38,7 +38,15 @@ def command_parser(chat_group, tg):
             print msg
             if msg['gid'] == chat_group and msg['gid'] != botid:
                 result = magic.do(msg)
-                tg.msg(msg['cmdgroup'], result)
+                #validate the result type and send it along it to the appropriate handler
+                if result[0] == 'msg':
+                    tg.msg(msg['cmdgroup'], result[1])
+                if result[0] == 'send_photo':
+                    tg.send_photo(msg['cmdgroup'], result[1])
+                if result[0] == 'send_video':
+                    tg.send_video(msg['cmdgroup'], result[1])
+                if result[0] == 'send_text':
+                    tg.send_text(msg['cmdgroup'], result[1])
                 print "The previous message was: %s" % lastMessage[0]
                 lastMessage.pop()
                 lastMessage.appendleft(msg['message'])
