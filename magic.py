@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 
 colinChoice = ['Jub\'f guvf Pbyva crefba lbh thlf xrrc gnyxvat nobhg?', 'Pbyva? Jub\'f gung?', 'Jung\'f n Pbyva?', 'Lbh thlf xrrc fnlvat gung anzr...', 'V unir ab vqrn jub lbh\'er gnyxvat nobhg.', 'Fgbc znxvat hc vzntvanel cbrcyr.', 'Guvf Pbyva thl fbhaqf nf vzntvanel nf uhzna serr jvyy', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
 pingChoice = ['V\'z trggvat gverq bs cbatvat', 'Fgbc vg', 'cbat', 'cbat', 'cbat', 'Qb lbh svaq guvf nzhfvat?', 'cbat', 'Cbat', 'Doreg', 'cbat', 'Abg evtug abj, V\'ir tbg n urnqnpur.', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat']
+eightBallChoice = ['Vg vf pregnva', 'Vg vf qrpvqrqyl fb', 'Jvgubhg n qbhog', 'Lrf qrsvavgryl', 'Lbh znl eryl ba vg', 'Nf V frr vg, lrf', 'Zbfg yvxryl', 'Bhgybbx tbbq', 'Lrf', 'Fvtaf cbvag gb lrf', 'Qba\'g pbhag ba vg', 'Zl ercyl vf ab', 'Zl fbheprf fnl ab', 'Bhgybbx abg fb tbbq', 'Irel qbhogshy']
 
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
@@ -43,6 +44,9 @@ def do(msg):
     # Not cat facts
     elif re.search('facts', msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) == 2:
         return str(msg['message'] + "? " + "I can't give you those, unfortunately.")
+    # 8 Ball
+    elif re.search('8.*ball.*\?' ,msg['message'], re.IGNORECASE) is not None:
+        return (random.choice(eightBallChoice)).decode('rot13')
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return (random.choice(colinChoice)).decode('rot13')
