@@ -42,7 +42,11 @@ def command_parser(chat_group, tg):
                 if result[0] == 'msg':
                     tg.msg(msg['cmdgroup'], result[1])
                 if result[0] == 'send_photo':
+                    print "sendin da photo!"
+                    print msg['cmdgroup'], result[1]
                     tg.send_photo(msg['cmdgroup'], result[1])
+                    time.sleep(0.2)
+                    os.remove(result[1])
                 if result[0] == 'send_video':
                     tg.send_video(msg['cmdgroup'], result[1])
                 if result[0] == 'send_text':

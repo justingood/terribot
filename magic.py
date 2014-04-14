@@ -14,10 +14,12 @@ import json, requests
 from bs4 import BeautifulSoup
 from httplib2 import Http
 from datetime import datetime, timedelta
+import tempfile
 
 colinChoice = ['Jub\'f guvf Pbyva crefba lbh thlf xrrc gnyxvat nobhg?', 'Pbyva? Jub\'f gung?', 'Jung\'f n Pbyva?', 'Lbh thlf xrrc fnlvat gung anzr...', 'V unir ab vqrn jub lbh\'er gnyxvat nobhg.', 'Fgbc znxvat hc vzntvanel cbrcyr.', 'Guvf Pbyva thl fbhaqf nf vzntvanel nf uhzna serr jvyy', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
 pingChoice = ['V\'z trggvat gverq bs cbatvat', 'Fgbc vg', 'cbat', 'cbat', 'cbat', 'Qb lbh svaq guvf nzhfvat?', 'cbat', 'Cbat', 'Doreg', 'cbat', 'Abg evtug abj, V\'ir tbg n urnqnpur.', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat']
 eightBallChoice = ['Vg vf pregnva', 'Vg vf qrpvqrqyl fb', 'Jvgubhg n qbhog', 'Lrf qrsvavgryl', 'Lbh znl eryl ba vg', 'Nf V frr vg, lrf', 'Zbfg yvxryl', 'Bhgybbx tbbq', 'Lrf', 'Fvtaf cbvag gb lrf', 'Qba\'g pbhag ba vg', 'Zl ercyl vf ab', 'Zl fbheprf fnl ab', 'Bhgybbx abg fb tbbq', 'Irel qbhogshy']
+wowurl = 'http://i.imgur.com/f07DJ1R.png'
 
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
@@ -47,6 +49,12 @@ def do(msg):
     # 8 Ball
     elif re.search('8.*ball.*\?' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', (random.choice(eightBallChoice)).decode('rot13')
+    elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
+        wowimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+        response = requests.get(wowurl)
+        wowimage.write(response.content)
+        wowimage.close()
+        return 'send_photo', wowimage.name
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', (random.choice(colinChoice)).decode('rot13')
