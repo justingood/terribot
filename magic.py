@@ -32,6 +32,13 @@ def do(msg):
     if re.match('ping' ,msg['message']) is not None:
         return 'msg', (random.choice(pingChoice)).decode('rot13')
     # URL Title Lookup
+    elif re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['message']) is not None:
+        imgtype = (re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['message'])).group(0)
+        tmpimage = tempfile.NamedTemporaryFile(delete=False,suffix=imgtype)
+        response = requests.get(msg['message'])
+        tmpimage.write(response.content)
+        tmpimage.close() 
+        return 'send_photo', tmpimage.name
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
         soup = BeautifulSoup(urllib2.urlopen(match.group("url").replace(",","")))
