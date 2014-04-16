@@ -20,6 +20,7 @@ colinChoice = ['Jub\'f guvf Pbyva crefba lbh thlf xrrc gnyxvat nobhg?', 'Pbyva? 
 pingChoice = ['V\'z trggvat gverq bs cbatvat', 'Fgbc vg', 'cbat', 'cbat', 'cbat', 'Qb lbh svaq guvf nzhfvat?', 'cbat', 'Cbat', 'Doreg', 'cbat', 'Abg evtug abj, V\'ir tbg n urnqnpur.', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat']
 eightBallChoice = ['Vg vf pregnva', 'Vg vf qrpvqrqyl fb', 'Jvgubhg n qbhog', 'Lrf qrsvavgryl', 'Lbh znl eryl ba vg', 'Nf V frr vg, lrf', 'Zbfg yvxryl', 'Bhgybbx tbbq', 'Lrf', 'Fvtaf cbvag gb lrf', 'Qba\'g pbhag ba vg', 'Zl ercyl vf ab', 'Zl fbheprf fnl ab', 'Bhgybbx abg fb tbbq', 'Irel qbhogshy']
 wowurl = ['http://i.imgur.com/f07DJ1R.png', 'http://i.imgur.com/yXAnrTi.jpg', 'http://i.imgur.com/TitHeo5.jpg', 'http://i.imgur.com/wNu8lSl.png', 'http://i.imgur.com/5RQUwXF.gif', 'http://i.imgur.com/2tH0Cb1.png']
+simpsonsurl = ['http://i.imgur.com/KwVcdsL.png']
 
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
@@ -56,12 +57,22 @@ def do(msg):
     # 8 Ball
     elif re.search('8.*ball.*\?' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', (random.choice(eightBallChoice)).decode('rot13')
-    elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
+    # Wow
+    elif re.search('Erik', msg['message'], re.IGNORECASE) is not None:
+        if re.search('Jeff', msg['user'], re.IGNORECASE) is not None:
+            return 'msg', "Shut up, Erik."
         wowimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get(random.choice(wowurl))
         wowimage.write(response.content)
         wowimage.close()
         return 'send_photo', wowimage.name
+    # Simpsons References
+    elif re.search('dog danglin', msg['message'], re.IGNORECASE) is not None:
+        simpsonsimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+        response = requests.get(simpsonsurl[0])
+        simpsonsimage.write(response.content)
+        simpsonsimage.close()
+        return 'send_photo', simpsonsimage.name
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', (random.choice(colinChoice)).decode('rot13')
