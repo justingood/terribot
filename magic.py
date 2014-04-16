@@ -58,8 +58,8 @@ def do(msg):
     elif re.search('8.*ball.*\?' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', (random.choice(eightBallChoice)).decode('rot13')
     # Wow
-    elif re.search('Erik', msg['message'], re.IGNORECASE) is not None:
-        if re.search('Jeff', msg['user'], re.IGNORECASE) is not None:
+    elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
+        if re.search('Erik', msg['user'], re.IGNORECASE) is not None:
             return 'msg', "Shut up, Erik."
         wowimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get(random.choice(wowurl))
