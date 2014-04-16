@@ -29,6 +29,8 @@ from pytg.tg import (
 
 def do(msg):
     terribot.mydelta = timedelta(seconds=30)
+    if re.search('Erik', msg['user'], re.IGNORECASE) is not None:
+        return 'msg', ''
     # Ping
     if re.match('ping' ,msg['message']) is not None:
         return 'msg', (random.choice(pingChoice)).decode('rot13')
@@ -59,8 +61,6 @@ def do(msg):
         return 'msg', (random.choice(eightBallChoice)).decode('rot13')
     # Wow
     elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
-        if re.search('Erik', msg['user'], re.IGNORECASE) is not None:
-            return 'msg', "Shut up, Erik."
         wowimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get(random.choice(wowurl))
         wowimage.write(response.content)
