@@ -75,7 +75,7 @@ def do(msg):
         return 'send_photo', simpsonsimage.name
     #Peacekeeper
     elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
-        return 'msg', ("Hey, hey, hey! We can all fight when we\'re drunk.")
+        return 'msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13'))
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', (random.choice(colinChoice)).decode('rot13')
