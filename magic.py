@@ -73,6 +73,13 @@ def do(msg):
         simpsonsimage.write(response.content)
         simpsonsimage.close()
         return 'send_photo', simpsonsimage.name
+    # Fuck this shit
+    elif re.search('fuck this shit', msg['message'], re.IGNORECASE) is not None:
+        fthisimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+        response = requests.get("http://i.imgur.com/LjdgV8V.png")
+        fthisimage.write(response.content)
+        fthisimage.close()
+        return 'send_photo', fthisimage.name
     #Peacekeeper
     elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13'))
