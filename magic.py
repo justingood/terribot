@@ -42,6 +42,15 @@ def do(msg):
         tmpimage.write(response.content)
         tmpimage.close() 
         return 'send_photo', tmpimage.name
+    elif re.search("\[geo\]", msg['message']) is not None:
+        match = re.search("([0-9]{2}.[0-9]{6}),(\??-[0-9]{2}.[0-9]{6})", msg['message'])
+        latitude = match.group(1)
+        longitude = match.group(2)
+        url = "http://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true".format(lat=latitude,lon=longitude)
+        response = json.loads(requests.get(url).content.decode("utf-8"))['results'][0]['formatted_address']
+        print "Got Location. It translates to:"
+        print response
+        return 'msg', response
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
         soup = BeautifulSoup(urllib2.urlopen(match.group("url").replace(",","")))
