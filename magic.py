@@ -29,8 +29,6 @@ from pytg.tg import (
 
 def do(msg):
     terribot.mydelta = timedelta(seconds=30)
-    if re.search('Erik', msg['user'], re.IGNORECASE) is not None:
-        return 'msg', ''
     # Ping
     if re.match('ping' ,msg['message']) is not None:
         return 'msg', (random.choice(pingChoice)).decode('rot13')
