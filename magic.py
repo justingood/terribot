@@ -49,6 +49,8 @@ def do(msg):
         response = json.loads(requests.get(url).content.decode("utf-8"))['results'][0]['formatted_address']
         print "Got Location. It translates to:"
         print response
+        if response == "Chinguetti, Mauritania":
+          response = "Nowheresville. Population: %s" % (msg['user'])
         return 'msg', response
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
