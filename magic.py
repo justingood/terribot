@@ -71,11 +71,16 @@ def do(msg):
         return 'msg', (random.choice(eightBallChoice)).decode('rot13')
     # Wow
     elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
-        wowimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
-        response = requests.get(random.choice(wowurl))
-        wowimage.write(response.content)
-        wowimage.close()
-        return 'send_photo', wowimage.name
+        now = datetime.now()
+        if not terribot.last_wow or (now - terribot.last_wow) >= terribot.mydelta:
+            terribot.last_wow = now
+            wowimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+            response = requests.get(random.choice(wowurl))
+            wowimage.write(response.content)
+            wowimage.close()
+            return 'send_photo', wowimage.name
+        else:
+          return 'msg', "ಠ_ಠ"
     # Simpsons References
     elif re.search('dog danglin', msg['message'], re.IGNORECASE) is not None:
         simpsonsimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
