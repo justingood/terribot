@@ -29,6 +29,7 @@ from pytg.tg import (
 
 def do(msg):
     terribot.mydelta = timedelta(seconds=30)
+    wowdelta = timedelta(minutes=2)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
         return 'msg', (random.choice(pingChoice)).decode('rot13')
@@ -72,7 +73,7 @@ def do(msg):
     # Wow
     elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
         now = datetime.now()
-        if not terribot.last_wow or (now - terribot.last_wow) >= terribot.mydelta:
+        if not terribot.last_wow or (now - terribot.last_wow) >= wowdelta:
             terribot.last_wow = now
             wowimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
             response = requests.get(random.choice(wowurl))
