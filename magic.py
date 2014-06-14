@@ -96,18 +96,19 @@ def do(msg):
         fthisimage.write(response.content)
         fthisimage.close()
         return 'send_photo', fthisimage.name
-    #Peacekeeper
-    elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
-        return 'msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13'))
-    # Colin
-    elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
-        return 'msg', (random.choice(colinChoice)).decode('rot13')
+    # Self Defense
     elif re.search('fuck', msg['message'], re.IGNORECASE) is not None and re.search(' ED', msg['message'], re.IGNORECASE) is not None:
         selfdefenseimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get("http://i.imgur.com/WvxdOOL.jpg")
         selfdefenseimage.write(response.content)
         selfdefenseimage.close()
         return 'send_photo', selfdefenseimage.name
+    #Peacekeeper
+    elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
+        return 'msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13'))
+    # Colin
+    elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
+        return 'msg', (random.choice(colinChoice)).decode('rot13')
     # Urban Dictionary definitions
     elif (re.search('define' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define" is in the message AND message is more than one word.
         defkeyword = str(msg['message']).split(' ', 1)[0]
