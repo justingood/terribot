@@ -110,6 +110,13 @@ def do(msg):
         dietimage.write(response.content)
         dietimage.close()
         return 'send_photo', dietimage.name
+    # Up yours children
+    elif re.search('up', msg['message'], re.IGNORECASE) is not None and re.search('yours', msg['message'], re.IGNORECASE) is not None and re.search('children', msg['message'], re.IGNORECASE) is not None:
+        upyoursimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+        response = requests.get("http://i.imgur.com/am5PDx6.jpg")
+        upyoursimage.write(response.content)
+        upyoursimage.close()
+        return 'send_photo', upyoursimage.name
     #Peacekeeper
     elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13'))
