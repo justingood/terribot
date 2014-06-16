@@ -103,6 +103,13 @@ def do(msg):
         selfdefenseimage.write(response.content)
         selfdefenseimage.close()
         return 'send_photo', selfdefenseimage.name
+    # Diet
+    elif re.search('diet', msg['message'], re.IGNORECASE) is not None:
+        dietimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+        response = requests.get("http://i.imgur.com/kZQDGNn.png")
+        dietimage.write(response.content)
+        dietimage.close()
+        return 'send_photo', dietimage.name
     #Peacekeeper
     elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13'))
