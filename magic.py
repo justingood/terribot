@@ -28,12 +28,12 @@ from pytg.tg import (
     )
 
 def do(msg):
-    terribot.mydelta = timedelta(seconds=30)
+    terribot.mydelta = timedelta(seconds=15)
     wowdelta = timedelta(minutes=2)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
         return 'msg', (random.choice(pingChoice)).decode('rot13')
-    # URL Title Lookup
+    # Send photos when photo URLs are posted
     elif re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['message']) is not None:
         imgtype = (re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['message'])).group(0)
         tmpimage = tempfile.NamedTemporaryFile(delete=False,suffix=imgtype)
@@ -41,6 +41,7 @@ def do(msg):
         tmpimage.write(response.content)
         tmpimage.close() 
         return 'send_photo', tmpimage.name
+    # Map address lookup
     elif re.search("\[geo\]", msg['message']) is not None:
         match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['message'])
         latitude = match.group(1)
@@ -53,6 +54,7 @@ def do(msg):
         if response == "Chinguetti, Mauritania":
           response = "Nowheresville. Population: %s" % (msg['user'])
         return 'msg', response
+    # URL Title Lookup
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
         soup = BeautifulSoup(urllib2.urlopen(match.group("url").replace(",","")))
@@ -147,7 +149,7 @@ def do(msg):
                 else:
                     return 'msg', "Sorry, but I couldn't find a definition for that word."
             else:
-                return 'msg', "Sorry, you'll have to wait ~10 seconds to look up another definition."
+                return 'msg', "Sorry, you'll have to wait ~15 seconds to look up another definition."
         else:
                 return 'msg', ''
 
