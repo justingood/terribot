@@ -21,6 +21,7 @@ pingChoice = ['V\'z trggvat gverq bs cbatvat', 'Fgbc vg', 'cbat', 'cbat', 'cbat'
 eightBallChoice = ['Vg vf pregnva', 'Vg vf qrpvqrqyl fb', 'Jvgubhg n qbhog', 'Lrf qrsvavgryl', 'Lbh znl eryl ba vg', 'Nf V frr vg, lrf', 'Zbfg yvxryl', 'Bhgybbx tbbq', 'Lrf', 'Fvtaf cbvag gb lrf', 'Qba\'g pbhag ba vg', 'Zl ercyl vf ab', 'Zl fbheprf fnl ab', 'Bhgybbx abg fb tbbq', 'Irel qbhogshy']
 wowurl = ['http://i.imgur.com/f07DJ1R.png', 'http://i.imgur.com/yXAnrTi.jpg', 'http://i.imgur.com/TitHeo5.jpg', 'http://i.imgur.com/wNu8lSl.png', 'http://i.imgur.com/5RQUwXF.gif', 'http://i.imgur.com/2tH0Cb1.png']
 simpsonsurl = ['http://i.imgur.com/KwVcdsL.png']
+defenseURL = ['http://i.imgur.com/WvxdOOL.jpg', 'http://i.imgur.com/cqC5Tpu.jpg']
 
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
@@ -101,7 +102,7 @@ def do(msg):
     # Self Defense
     elif re.search('fuck', msg['message'], re.IGNORECASE) is not None and re.search(' ED', msg['message'], re.IGNORECASE) is not None:
         selfdefenseimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
-        response = requests.get("http://i.imgur.com/WvxdOOL.jpg")
+        response = requests.get(random.choice(defenseURL))
         selfdefenseimage.write(response.content)
         selfdefenseimage.close()
         return 'send_photo', selfdefenseimage.name
