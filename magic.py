@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup
 from httplib2 import Http
 from datetime import datetime, timedelta
 import tempfile
+import pickledb
 
 colinChoice = ['Jub\'f guvf Pbyva crefba lbh thlf xrrc gnyxvat nobhg?', 'Pbyva? Jub\'f gung?', 'Jung\'f n Pbyva?', 'Lbh thlf xrrc fnlvat gung anzr...', 'V unir ab vqrn jub lbh\'er gnyxvat nobhg.', 'Fgbc znxvat hc vzntvanel cbrcyr.', 'Guvf Pbyva thl fbhaqf nf vzntvanel nf uhzna serr jvyy', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
 pingChoice = ['V\'z trggvat gverq bs cbatvat', 'Fgbc vg', 'cbat', 'cbat', 'cbat', 'Qb lbh svaq guvf nzhfvat?', 'cbat', 'Cbat', 'Doreg', 'cbat', 'Abg evtug abj, V\'ir tbg n urnqnpur.', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat']
@@ -23,10 +24,22 @@ wowurl = ['http://i.imgur.com/f07DJ1R.png', 'http://i.imgur.com/yXAnrTi.jpg', 'h
 simpsonsurl = ['http://i.imgur.com/KwVcdsL.png']
 defenseURL = ['http://i.imgur.com/WvxdOOL.jpg', 'http://i.imgur.com/cqC5Tpu.jpg']
 
+#Init PickleDB
+pagingdb = pickledb.load('pagingdb.db', False)
+
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
     dialog_list, chat_info, message, user_status,
     )
+
+
+def direct(msg):
+    if re.match('signup', msg['message']) is not None:
+         #pagingdb.set(msg['message'].split(' ', 2)[0], msg['uid']
+         #return 'msg', "Adding %s as a pager to send to you!" % msg['message'].split(' ', 2)[0]
+         print "direct message function"
+         return 'msg', 'blah'
+
 
 def do(msg):
     terribot.mydelta = timedelta(seconds=15)

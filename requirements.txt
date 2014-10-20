@@ -8,3 +8,4 @@ beautifulsoup4==4.3.2
 requests==2.2.1
 #For urban dictionary lookup
 httplib2==0.8
+pickledb

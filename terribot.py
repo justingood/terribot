@@ -37,7 +37,16 @@ def command_parser(chat_group, tg):
             msg = (yield)
             # Only process if the group name match
             print msg
-            if msg['gid'] == chat_group and msg['uid'] != botid:
+            if msg['peer'] == "user":
+                #don't crash
+                print "getting result"
+                result = magic.direct(msg)
+                print result
+
+                if result[0] == 'msg':
+                  tg.msg(msg['user'], result[1])
+
+            elif msg['gid'] == chat_group and msg['uid'] != botid:
                 result = magic.do(msg)
                 #validate the result type and send it along it to the appropriate handler
                 if result[0] == 'msg':
