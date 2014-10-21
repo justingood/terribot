@@ -56,6 +56,7 @@ def direct(msg):
          print "cmduser is %s" % msg['cmduser']
          if pagerentry == msg['cmduser']:
              pagingdb.rem(pagerkey)
+             pagingdb.dump()
              return 'msg', "I've removed paging for %s" % pagerkey
          else:
              return 'msg', "Sorry, you're not the same user that signed up for this pager key"
