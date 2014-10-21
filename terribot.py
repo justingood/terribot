@@ -37,9 +37,19 @@ def command_parser(chat_group, tg):
             msg = (yield)
             # Only process if the group name match
             print msg
-            if msg['gid'] == chat_group and msg['uid'] != botid:
+            if msg['peer'] == "user":
+                #don't crash
+                print "getting result"
+                result = magic.direct(msg)
+                if result[0] == 'msg':
+                  tg.msg(msg['user'], result[1])
+
+            elif msg['gid'] == chat_group and msg['uid'] != botid:
                 result = magic.do(msg)
                 #validate the result type and send it along it to the appropriate handler
+                if result[0] == 'usr_msg':
+                    pagingstring = msg['user'] + " paged you in the chat called " + msg['group']
+                    tg.msg(result[1], pagingstring)
                 if result[0] == 'msg':
                     tg.msg(msg['cmdgroup'], result[1])
                 if result[0] == 'send_photo':

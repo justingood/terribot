@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup
 from httplib2 import Http
 from datetime import datetime, timedelta
 import tempfile
+import pickledb
 
 colinChoice = ['Jub\'f guvf Pbyva crefba lbh thlf xrrc gnyxvat nobhg?', 'Pbyva? Jub\'f gung?', 'Jung\'f n Pbyva?', 'Lbh thlf xrrc fnlvat gung anzr...', 'V unir ab vqrn jub lbh\'er gnyxvat nobhg.', 'Fgbc znxvat hc vzntvanel cbrcyr.', 'Guvf Pbyva thl fbhaqf nf vzntvanel nf uhzna serr jvyy', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
 pingChoice = ['V\'z trggvat gverq bs cbatvat', 'Fgbc vg', 'cbat', 'cbat', 'cbat', 'Qb lbh svaq guvf nzhfvat?', 'cbat', 'Cbat', 'Doreg', 'cbat', 'Abg evtug abj, V\'ir tbg n urnqnpur.', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat']
@@ -23,10 +24,37 @@ wowurl = ['http://i.imgur.com/f07DJ1R.png', 'http://i.imgur.com/yXAnrTi.jpg', 'h
 simpsonsurl = ['http://i.imgur.com/KwVcdsL.png']
 defenseURL = ['http://i.imgur.com/WvxdOOL.jpg', 'http://i.imgur.com/cqC5Tpu.jpg']
 
+#Init PickleDB
+pagingdb = pickledb.load('pagingdb.db', False)
+
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
     dialog_list, chat_info, message, user_status,
     )
+
+
+def direct(msg):
+    if re.match('^help.*', msg['message'], re.IGNORECASE) is not None:
+        return 'msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list]."
+    if re.match('^list.*', msg['message'], re.IGNORECASE) is not None:
+        return 'msg', "yeah, i can't do that until pickledb 0.4 is released..."
+    if re.match('^Enable @.*', msg['message'], re.IGNORECASE) is not None:
+         pagerkey = str(msg['message']).split(' ',1)[1]
+         pagingdb.set(pagerkey, msg['cmduser'])
+         pagingdb.dump()
+         return 'msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1]
+    if re.match('^Disable @.*', msg['message'], re.IGNORECASE) is not None:
+         pagerkey = str(msg['message']).split(' ',1)[1]
+         pagerentry = pagingdb.get(pagerkey)
+         if pagerentry == msg['cmduser']:
+             pagingdb.rem(pagerkey)
+             pagingdb.dump()
+             return 'msg', "I've removed paging for %s" % pagerkey
+         else:
+             return 'msg', "Sorry, you're not the same user that signed up for this pager key"
+    else:
+        return 'msg', ''
+
 
 def do(msg):
     terribot.mydelta = timedelta(seconds=15)
@@ -42,6 +70,10 @@ def do(msg):
         tmpimage.write(response.content)
         tmpimage.close() 
         return 'send_photo', tmpimage.name
+    elif re.search('^@.*', msg['message'], re.IGNORECASE) is not None:
+        pagerkey = str(msg['message']).split(' ', 1)[0]
+        paginguser = pagingdb.get(pagerkey)
+        return 'usr_msg', paginguser
     # Map address lookup
     elif re.search("\[geo\]", msg['message']) is not None:
         match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['message'])
