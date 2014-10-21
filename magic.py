@@ -34,11 +34,33 @@ from pytg.tg import (
 
 
 def direct(msg):
-    if re.match('signup', msg['message']) is not None:
+    if re.match('^help.*', msg['message'], re.IGNORECASE) is not None:
+        return 'msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list]."
+    if re.match('^list.*', msg['message'], re.IGNORECASE) is not None:
+        return 'msg', "yeah, i can't do that until pickledb 0.4 is released..."
+    if re.match('^Enable @.*', msg['message'], re.IGNORECASE) is not None:
          #pagingdb.set(msg['message'].split(' ', 2)[0], msg['uid']
          #return 'msg', "Adding %s as a pager to send to you!" % msg['message'].split(' ', 2)[0]
-         print "direct message function"
-         return 'msg', 'blah'
+         pagerkey = str(msg['message']).split(' ',1)[1]
+         print "pagerkey:"
+         print pagerkey
+         print "cmduser:"
+         print msg['cmduser']
+         pagingdb.set(pagerkey, msg['cmduser'])
+         pagingdb.dump()
+         return 'msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1]
+    if re.match('^Disable @.*', msg['message'], re.IGNORECASE) is not None:
+         pagerkey = str(msg['message']).split(' ',1)[1]
+         pagerentry = pagingdb.get(pagerkey)
+         print "pager entry is %s" % pagerentry
+         print "cmduser is %s" % msg['cmduser']
+         if pagerentry == msg['cmduser']:
+             pagingdb.rem(pagerkey)
+             return 'msg', "I've removed paging for %s" % pagerkey
+         else:
+             return 'msg', "Sorry, you're not the same user that signed up for this pager key"
+    else:
+        return 'msg', ''
 
 
 def do(msg):
@@ -55,6 +77,15 @@ def do(msg):
         tmpimage.write(response.content)
         tmpimage.close() 
         return 'send_photo', tmpimage.name
+    elif re.search('^@.*', msg['message'], re.IGNORECASE) is not None:
+        print "testing pager"
+        pagerkey = str(msg['message']).split(' ', 1)[0]
+        pagertext = str(msg['message']).split(' ', 1)[1]
+        print "pagerkey: %s" % pagerkey
+        print "pagertext: %s" % pagertext
+        paginguser = pagingdb.get(pagerkey)
+        print "paginguser: %s" % paginguser
+        return 'usr_msg', pagertext, paginguser
     # Map address lookup
     elif re.search("\[geo\]", msg['message']) is not None:
         match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['message'])

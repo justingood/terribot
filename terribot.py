@@ -41,14 +41,16 @@ def command_parser(chat_group, tg):
                 #don't crash
                 print "getting result"
                 result = magic.direct(msg)
-                print result
-
                 if result[0] == 'msg':
                   tg.msg(msg['user'], result[1])
 
             elif msg['gid'] == chat_group and msg['uid'] != botid:
                 result = magic.do(msg)
                 #validate the result type and send it along it to the appropriate handler
+                if result[0] == 'usr_msg':
+                    print result[2]
+                    string = msg['user'] + " paged you in the chat called " + msg['group']
+                    tg.msg(result[2], string)
                 if result[0] == 'msg':
                     tg.msg(msg['cmdgroup'], result[1])
                 if result[0] == 'send_photo':
