@@ -8,4 +8,5 @@ beautifulsoup4==4.3.2
 requests==2.2.1
 #For urban dictionary lookup
 httplib2==0.8
-pickledb
+#For pickledb - I want 0.4 so we can print all contents. 0.3 is installed for now.
+pickledb==0.3
