@@ -16,6 +16,8 @@ from pytg.tg import (
 import magic
 from collections import deque
 
+os.system("/usr/bin/killall telegram")
+
 QUIT = False
 DEBUG = False
 
@@ -41,8 +43,8 @@ def command_parser(chat_group, tg):
                 #don't crash
                 print "getting result"
                 result = magic.direct(msg)
-                if result[0] == 'msg':
-                  tg.msg(msg['user'], result[1])
+                if result[0] == 'usr_msg':
+                  tg.msg(msg['cmduser'], result[1])
 
             elif msg['gid'] == chat_group and msg['uid'] != botid:
                 result = magic.do(msg)
