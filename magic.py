@@ -35,25 +35,25 @@ from pytg.tg import (
 
 def direct(msg):
     if re.match('^help.*', msg['message'], re.IGNORECASE) is not None:
-        return 'msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list]."
+        return 'usr_msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list]."
     if re.match('^list.*', msg['message'], re.IGNORECASE) is not None:
-        return 'msg', "yeah, i can't do that until pickledb 0.4 is released..."
+        return 'usr_msg', "yeah, i can't do that until pickledb 0.4 is released..."
     if re.match('^Enable @.*', msg['message'], re.IGNORECASE) is not None:
          pagerkey = str(msg['message']).split(' ',1)[1]
          pagingdb.set(pagerkey, msg['cmduser'])
          pagingdb.dump()
-         return 'msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1]
+         return 'usr_msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1]
     if re.match('^Disable @.*', msg['message'], re.IGNORECASE) is not None:
          pagerkey = str(msg['message']).split(' ',1)[1]
          pagerentry = pagingdb.get(pagerkey)
          if pagerentry == msg['cmduser']:
              pagingdb.rem(pagerkey)
              pagingdb.dump()
-             return 'msg', "I've removed paging for %s" % pagerkey
+             return 'usr_msg', "I've removed paging for %s" % pagerkey
          else:
-             return 'msg', "Sorry, you're not the same user that signed up for this pager key"
+             return 'usr_msg', "Sorry, you're not the same user that signed up for this pager key"
     else:
-        return 'msg', ''
+        return 'usr_msg', ''
 
 
 def do(msg):
