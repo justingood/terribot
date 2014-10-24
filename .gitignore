@@ -54,3 +54,6 @@ docs/_build/
 
 #PickleDB for the bot
 pagingdb.db
+
+#Vagrant
+.vagrant/
