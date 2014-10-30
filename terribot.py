@@ -20,7 +20,10 @@ import ConfigParser
 os.system("/usr/bin/killall telegram")
 
 config = ConfigParser.RawConfigParser()
-config.read('example.cfg')
+config.read('config.cfg')
+
+deployment = os.getenv('ENV')
+telegram_dir = config.get(deployment, 'telegram_dir')
 
 QUIT = False
 
@@ -49,7 +52,7 @@ def command_parser(chat_group, tg):
                 if result[0] == 'usr_msg':
                   tg.msg(msg['cmduser'], result[1])
 
-            elif msg['gid'] == chat_group and msg['uid'] != botid:
+            elif msg['gid'] in watch_rooms and msg['uid'] != botid:
                 result = magic.do(msg)
                 #validate the result type and send it along it to the appropriate handler
                 if result[0] == 'usr_msg':
