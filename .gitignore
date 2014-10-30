@@ -57,3 +57,6 @@ pagingdb.db
 
 #Vagrant
 .vagrant/
+
+#Configuration
+config.cfg
