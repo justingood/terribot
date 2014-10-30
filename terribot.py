@@ -15,11 +15,14 @@ from pytg.tg import (
 )
 import magic
 from collections import deque
+import ConfigParser
 
 os.system("/usr/bin/killall telegram")
 
+config = ConfigParser.RawConfigParser()
+config.read('example.cfg')
+
 QUIT = False
-DEBUG = False
 
 last_def = None
 last_wow = None
