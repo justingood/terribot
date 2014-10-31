@@ -22,8 +22,13 @@ os.system("/usr/bin/killall telegram")
 config = ConfigParser.RawConfigParser()
 config.read('config.cfg')
 
-deployment = os.getenv('ENV')
+deployment = os.getenv('DEPLOYMENT')
+if deployment is None:
+    deployment = 'development'
+
 telegram_dir = config.get(deployment, 'telegram_dir')
+bot_id = config.get(deployment, 'bot_id')
+watch_rooms = config.get(deployment, 'watch_rooms')
 
 QUIT = False
 
@@ -52,7 +57,7 @@ def command_parser(chat_group, tg):
                 if result[0] == 'usr_msg':
                   tg.msg(msg['cmduser'], result[1])
 
-            elif msg['gid'] in watch_rooms and msg['uid'] != botid:
+            elif msg['gid'] in watch_rooms and msg['uid'] != bot_id:
                 result = magic.do(msg)
                 #validate the result type and send it along it to the appropriate handler
                 if result[0] == 'usr_msg':
@@ -76,25 +81,24 @@ def command_parser(chat_group, tg):
 
 
 if __name__ == '__main__':
-    if os.getenv('TELEGRAM_DIR') is None:
-        print "You must set the TELEGRAM_DIR environment variable."
+    if telegram_dir is None:
+        print "You must set the telegram_dir configuration option."
         sys.exit()
     else:
-        telegram = os.getenv('TELEGRAM_DIR').rstrip("/") + "/telegram"
-        pubkey = os.getenv('TELEGRAM_DIR').rstrip("/") + "/tg.pub"
+        telegram = telegram_dir.rstrip("/") + "/telegram"
+        pubkey = telegram_dir.rstrip("/") + "/tg.pub"
 
-    if os.getenv('TELEGRAM_BOTID') is None:
-        print "You need to set the TELEGRAM_BOTID environment variable"
+    if bot_id is None:
+        print "You need to set the bot_id configuration option."
         sys.exit()
-    else:
-        botid = os.getenv('TELEGRAM_BOTID')
 
-    if os.getenv('TELEGRAM_ROOM') is None:
-        print "You need to set the TELEGRAM_ROOM environment variable"
+    if watch_rooms is None:
+        print "You need to set the watch_rooms configuration option."
         sys.exit()
-    else:
-        grpuid = os.getenv('TELEGRAM_ROOM')
-        
+    #This grpuid stuff has to change to wach_rooms list.
+    #else:
+    #    grpuid = os.getenv('TELEGRAM_ROOM')
+
     tg = pytg.Telegram(telegram, pubkey)
     pipeline = message(command_parser(grpuid, tg))
 
