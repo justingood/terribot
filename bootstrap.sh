@@ -23,7 +23,7 @@ Run the following:
 
 Once that's set up, you can type 'safe_quit' to exit. You may want to backup the 'auth' file it generates at /home/vagrant/.telegram/auth to avoid this process next time.
 
-To start the bot, change to the terribot directory, and run the main python file:
+To start the bot, change to the terribot directory, copy ''config.cfg.sample'' to ''config.cfg'', change it to match the values you want and run the main python file:
 
 cd /home/vagrant/telegram
 python terribot.py
