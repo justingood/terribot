@@ -28,7 +28,7 @@ if deployment is None:
 
 telegram_dir = config.get(deployment, 'telegram_dir')
 bot_id = config.get(deployment, 'bot_id')
-watch_rooms = config.get(deployment, 'watch_rooms')
+watch_room = config.get(deployment, 'watch_room')
 
 QUIT = False
 
@@ -57,7 +57,7 @@ def command_parser(chat_group, tg):
                 if result[0] == 'usr_msg':
                   tg.msg(msg['cmduser'], result[1])
 
-            elif msg['gid'] in watch_rooms and msg['uid'] != bot_id:
+            elif msg['gid'] in watch_room and msg['uid'] != bot_id:
                 result = magic.do(msg)
                 #validate the result type and send it along it to the appropriate handler
                 if result[0] == 'usr_msg':
@@ -92,12 +92,12 @@ if __name__ == '__main__':
         print "You need to set the bot_id configuration option."
         sys.exit()
 
-    if watch_rooms is None:
-        print "You need to set the watch_rooms configuration option."
+    if watch_room is None:
+        print "You need to set the watch_room configuration option."
         sys.exit()
     #This grpuid stuff has to change to wach_rooms list.
-    #else:
-    #    grpuid = os.getenv('TELEGRAM_ROOM')
+    else:
+        grpuid = watch_room
 
     tg = pytg.Telegram(telegram, pubkey)
     pipeline = message(command_parser(grpuid, tg))

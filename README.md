@@ -24,3 +24,8 @@ Once you've got virtualenv installed, you can install all the required dependenc
 ```source /path/to/virtualenv/bin/activate```
 * Install required python modules <br>
 ```cd /path/to/source; pip install -r requirements.txt```
+
+#### Vagrant
+This way is easiest. First, get [Vagrant](https://www.vagrantup.com/) installed on your local machine. You'll probably want [Virtualbox](https://www.virtualbox.org/) too.
+
+Then, all that's required is to issue a 'vagrant up' and the VM will be built, nearly ready to go. The instructions for use will be presented upon login.
