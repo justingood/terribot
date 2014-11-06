@@ -1,0 +1,4 @@
+[development]
+telegram_dir=/home/vagrant/tg
+watch_rooms = 1234,1235
+botid=12346
