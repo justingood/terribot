@@ -37,19 +37,19 @@ def direct(msg):
     if re.match('^help.*', msg['message'], re.IGNORECASE) is not None:
         return 'usr_msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list]."
     if re.match('^list.*', msg['message'], re.IGNORECASE) is not None:
-        return 'usr_msg', "yeah, i can't do that until pickledb 0.4 is released..."
+        return 'usr_msg', "yeah, sorry, the thing is I can't do that until pickledb 0.4 is released..."
     if re.match('^Enable @.*', msg['message'], re.IGNORECASE) is not None:
          pagerkey = str(msg['message']).split(' ',1)[1]
-         pagingdb.set(pagerkey, msg['cmduser'])
+         pagingdb.set(pagerkey.lower(), msg['cmduser'])
          pagingdb.dump()
-         return 'usr_msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1]
+         return 'usr_msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1].lower()
     if re.match('^Disable @.*', msg['message'], re.IGNORECASE) is not None:
          pagerkey = str(msg['message']).split(' ',1)[1]
-         pagerentry = pagingdb.get(pagerkey)
+         pagerentry = pagingdb.get(pagerkey.lower())
          if pagerentry == msg['cmduser']:
-             pagingdb.rem(pagerkey)
+             pagingdb.rem(pagerkey.lower())
              pagingdb.dump()
-             return 'usr_msg', "I've removed paging for %s" % pagerkey
+             return 'usr_msg', "I've removed paging for %s" % pagerkey.lower()
          else:
              return 'usr_msg', "Sorry, you're not the same user that signed up for this pager key"
     else:
@@ -68,15 +68,15 @@ def do(msg):
         tmpimage = tempfile.NamedTemporaryFile(delete=False,suffix=imgtype)
         response = requests.get(msg['message'])
         tmpimage.write(response.content)
-        tmpimage.close() 
+        tmpimage.close()
         return 'send_photo', tmpimage.name
     elif re.search('^@.*', msg['message'], re.IGNORECASE) is not None:
         pagerkey = str(msg['message']).split(' ', 1)[0]
-        paginguser = pagingdb.get(pagerkey)
+        paginguser = pagingdb.get(pagerkey.lower())
 	if paginguser is not None:
             return 'usr_msg', paginguser
         else:
-            return 'msg', "That user doesn't exist"
+            return 'msg', "Sorry, that user hasn't been set up yet."
     # Map address lookup
     elif re.search("\[geo\]", msg['message']) is not None:
         match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['message'])
@@ -167,7 +167,7 @@ def do(msg):
         if re.search('define', defkeyword, re.IGNORECASE):                                         #if define is the FIRST word, otherwise ignore it (so people can still use "define" in a sentence)
             now = datetime.now()
             if not terribot.last_def or (now - terribot.last_def) >= terribot.mydelta:
-                terribot.last_def = now                                           
+                terribot.last_def = now
                 h = Http()
                 resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(msg['message'].replace(defkeyword,"")), "GET")   #send message to the API, without define keyword
                 if re.search('no_results', rawcontent) is None:                     #if there is a definition for that word
