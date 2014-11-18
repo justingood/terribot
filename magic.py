@@ -73,7 +73,10 @@ def do(msg):
     elif re.search('^@.*', msg['message'], re.IGNORECASE) is not None:
         pagerkey = str(msg['message']).split(' ', 1)[0]
         paginguser = pagingdb.get(pagerkey)
-        return 'usr_msg', paginguser
+	if paginguser is not None:
+            return 'usr_msg', paginguser
+        else:
+            return 'msg', "That user doesn't exist"
     # Map address lookup
     elif re.search("\[geo\]", msg['message']) is not None:
         match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['message'])
