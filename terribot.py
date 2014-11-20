@@ -110,7 +110,7 @@ if __name__ == '__main__':
     try:
 	while True:
             # Keep on polling so that messages will pass through our pipeline, but don't peg the CPU
-	    time.sleep(0.0001)
+	    time.sleep(0.001)
             tg.poll()
 
             if QUIT == True:
