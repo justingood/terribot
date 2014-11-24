@@ -77,8 +77,8 @@ def do(msg):
         paginguser = pagingdb.get(pagerkey.lower())
 	if paginguser is not None:
             return 'usr_msg', paginguser
-        else:
-            return 'msg', "Sorry, that user hasn't been set up yet."
+        #else:
+        #    return 'msg', "Sorry, that user hasn't been set up yet."
     # Map address lookup
     elif re.search("\[geo\]", msg['message']) is not None:
         match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['message'])
