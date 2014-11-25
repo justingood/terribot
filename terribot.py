@@ -34,6 +34,7 @@ QUIT = False
 
 last_def = None
 last_wow = None
+last_imgme = None
 
 #Initialization. What's the worst that could happen?
 lastMessage = deque([('XVYYNYYGURUHZNAF'.decode('rot13'))])

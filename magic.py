@@ -61,6 +61,7 @@ def direct(msg):
 def do(msg):
     terribot.mydelta = timedelta(seconds=15)
     wowdelta = timedelta(minutes=2)
+    imgmedelta = timedelta(minutes=2)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
         return 'msg', (random.choice(pingChoice)).decode('rot13')
@@ -72,6 +73,7 @@ def do(msg):
         tmpimage.write(response.content)
         tmpimage.close()
         return 'send_photo', tmpimage.name
+    # User Paging
     elif re.search('^@.*', msg['message'], re.IGNORECASE) is not None:
         pagerkey = str(msg['message']).split(' ', 1)[0]
         paginguser = pagingdb.get(pagerkey.lower())
@@ -157,14 +159,20 @@ def do(msg):
         upyoursimage.write(response.content)
         upyoursimage.close()
         return 'send_photo', upyoursimage.name
+    # IMGME
     elif re.search('(im.*g.*me)(.*)', msg['message'], re.IGNORECASE) is not None:
-        match = re.search('(im.*g.*me)(.*)', msg['message'], re.IGNORECASE)
-        imgurl = get_image_url(match.group(2))
-        imgpath = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
-        response = requests.get(imgurl)
-        imgpath.write(response.content)
-        imgpath.close()
-        return 'send_photo', imgpath.name
+        now = datetime.now()
+        if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
+            terribot.last_imgme = now
+            match = re.search('(im.*g.*me)(.*)', msg['message'], re.IGNORECASE)
+            imgurl = get_image_url(match.group(2))
+            imgpath = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+            response = requests.get(imgurl)
+            imgpath.write(response.content)
+            imgpath.close()
+            return 'send_photo', imgpath.name
+        else:
+          return 'msg', "ಠ_ಠ"
     elif re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE) is not None:
         match = re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE)
         try:
