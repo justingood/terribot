@@ -160,12 +160,12 @@ def do(msg):
         upyoursimage.close()
         return 'send_photo', upyoursimage.name
     # IMGME
-    elif re.search('(im.*g.*me)(.*)', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE) is not None:
         now = datetime.now()
         if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
             terribot.last_imgme = now
-            match = re.search('(im.*g.*me)(.*)', msg['message'], re.IGNORECASE)
-            imgurl = get_image_url(match.group(2))
+            match = re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE)
+            imgurl = get_image_url(match.group(1))
             imgpath = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
             response = requests.get(imgurl)
             imgpath.write(response.content)
