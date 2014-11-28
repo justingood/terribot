@@ -61,7 +61,7 @@ def direct(msg):
 def do(msg):
     terribot.mydelta = timedelta(seconds=15)
     wowdelta = timedelta(minutes=2)
-    imgmedelta = timedelta(minutes=2)
+    imgmedelta = timedelta(seconds=15)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
         return 'msg', (random.choice(pingChoice)).decode('rot13')
@@ -173,13 +173,14 @@ def do(msg):
             return 'send_photo', imgpath.name
         else:
           return 'msg', "ಠ_ಠ"
-    elif re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE) is not None:
-        match = re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE)
-        try:
-            lookup = wikipedia.summary(match.group(2), sentences=2)
-            return 'msg', lookup.encode('utf-8', 'replace')
-        except:
-            return 'msg', "Can't find it. Guess it will remain a mystery."
+    elif re.search('ED.*\?' ,msg['message'], re.IGNORECASE) is not None:
+        if re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE) is not None:
+            match = re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE)
+            try:
+                lookup = wikipedia.summary(match.group(2), sentences=2)
+                return 'msg', lookup.encode('utf-8', 'replace')
+            except:
+                return 'msg', "Can't find it. Guess it will remain a mystery."
     #Peacekeeper
     elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
         return 'msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13'))
