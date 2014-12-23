@@ -55,28 +55,30 @@ def command_parser(chat_group, tg):
                 #don't crash
                 print "getting result"
                 result = magic.direct(msg)
-                if result[0] == 'usr_msg':
-                  tg.msg(msg['cmduser'], result[1])
+                if botfunction == 'usr_msg':
+                  tg.msg(msg['cmduser'], resultdata)
 
             elif msg['gid'] in watch_rooms and msg['uid'] != bot_id:
                 result = magic.do(msg)
-                #validate the result type and send it along it to the appropriate handler
-                if result[0] == 'usr_msg':
-                    pagingstring = msg['user'] + " paged you in the chat called " + msg['group']
-                    tg.msg(result[1], pagingstring)
-                if result[0] == 'msg':
-                    tg.msg(msg['cmdgroup'], result[1])
-                if result[0] == 'send_photo':
-                    tg.send_photo(msg['cmdgroup'], result[1])
-                    time.sleep(0.2)
-                    os.remove(result[1])
-                if result[0] == 'send_video':
-                    tg.send_video(msg['cmdgroup'], result[1])
-                if result[0] == 'send_text':
-                    tg.send_text(msg['cmdgroup'], result[1])
-                print "The previous message was: %s" % lastMessage[0]
-                lastMessage.pop()
-                lastMessage.appendleft(msg['message'])
+                #validate the result type and send it along it to the appropriate handler.
+                # results will look like = [('a', 'A'), ('b', 'B')]
+                for i, (botfunction, resultdata) in enumerate(result):
+                    if botfunction == 'usr_msg':
+                        pagingstring = msg['user'] + " paged you in the chat called " + msg['group']
+                        tg.msg(resultdata, pagingstring)
+                    if botfunction == 'msg':
+                        tg.msg(msg['cmdgroup'], resultdata)
+                    if botfunction == 'send_photo':
+                        tg.send_photo(msg['cmdgroup'], resultdata)
+                        time.sleep(0.2)
+                        os.remove(resultdata)
+                    if botfunction == 'send_video':
+                        tg.send_video(msg['cmdgroup'], resultdata)
+                    if botfunction == 'send_text':
+                        tg.send_text(msg['cmdgroup'], resultdata)
+                    print "The previous message was: %s" % lastMessage[0]
+                    lastMessage.pop()
+                    lastMessage.appendleft(msg['message'])
     except GeneratorExit:
         pass
 

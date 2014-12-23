@@ -37,25 +37,25 @@ from pytg.tg import (
 
 def direct(msg):
     if re.match('^help.*', msg['message'], re.IGNORECASE) is not None:
-        return 'usr_msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list]."
+        return [('usr_msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list].")]
     if re.match('^list.*', msg['message'], re.IGNORECASE) is not None:
-        return 'usr_msg', "yeah, sorry, the thing is I can't do that until pickledb 0.4 is released..."
+        return [('usr_msg', "yeah, sorry, the thing is I can't do that until pickledb 0.4 is released...")]
     if re.match('^Enable @.*', msg['message'], re.IGNORECASE) is not None:
          pagerkey = str(msg['message']).split(' ',1)[1]
          pagingdb.set(pagerkey.lower(), msg['cmduser'])
          pagingdb.dump()
-         return 'usr_msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1].lower()
+         return [('usr_msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1].lower())]
     if re.match('^Disable @.*', msg['message'], re.IGNORECASE) is not None:
          pagerkey = str(msg['message']).split(' ',1)[1]
          pagerentry = pagingdb.get(pagerkey.lower())
          if pagerentry == msg['cmduser']:
              pagingdb.rem(pagerkey.lower())
              pagingdb.dump()
-             return 'usr_msg', "I've removed paging for %s" % pagerkey.lower()
+             return [('usr_msg', "I've removed paging for %s" % pagerkey.lower())]
          else:
-             return 'usr_msg', "Sorry, you're not the same user that signed up for this pager key"
+             return [('usr_msg', "Sorry, you're not the same user that signed up for this pager key")]
     else:
-        return 'usr_msg', ''
+        return [('usr_msg', '')]
 
 
 def do(msg):
@@ -64,7 +64,7 @@ def do(msg):
     imgmedelta = timedelta(seconds=15)
     # Ping
     if re.match('ping' ,msg['message']) is not None:
-        return 'msg', (random.choice(pingChoice)).decode('rot13')
+        return [('msg', (random.choice(pingChoice)).decode('rot13')), ('msg', 'Go ping yourself, while you\'re at it.')]
     # Send photos when photo URLs are posted
     elif re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['message']) is not None:
         imgtype = (re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['message'])).group(0)
@@ -72,15 +72,15 @@ def do(msg):
         response = requests.get(msg['message'])
         tmpimage.write(response.content)
         tmpimage.close()
-        return 'send_photo', tmpimage.name
+        return [('send_photo', tmpimage.name)]
     # User Paging
     elif re.search('^@.*', msg['message'], re.IGNORECASE) is not None:
         pagerkey = str(msg['message']).split(' ', 1)[0]
         paginguser = pagingdb.get(pagerkey.lower())
-	if paginguser is not None:
-            return 'usr_msg', paginguser
-        #else:
-        #    return 'msg', "Sorry, that user hasn't been set up yet."
+        if paginguser is not None:
+            return [('usr_msg', paginguser)]
+        else:
+            return [('msg', '')]
     # Map address lookup
     elif re.search("\[geo\]", msg['message']) is not None:
         match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['message'])
@@ -93,25 +93,25 @@ def do(msg):
         print response
         if response == "Chinguetti, Mauritania":
           response = "Nowheresville. Population: %s" % (msg['user'])
-        return 'msg', response
+        return [('msg', response)]
     # URL Title Lookup
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
         soup = BeautifulSoup(urllib2.urlopen(match.group("url").replace(",","")))
         titlestring = soup.title.string.encode('utf-8', 'ignore')
         if re.search(" - YouTube", titlestring) is not None:
-            return 'msg', titlestring.replace(" - YouTube","")
+            return [('msg', titlestring.replace(" - YouTube",""))]
         else:
-            return 'msg', titlestring
+            return [('msg', titlestring)]
     # Cat facts
     elif re.search('(catfax)|(cat.?facts)', msg['message'], re.IGNORECASE) is not None:
-        return 'msg', json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0]
+        return [('msg', json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0])]
     # Not cat facts
     elif re.search('facts', msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) == 2:
-        return 'msg', str(msg['message'] + "? " + "I can't give you those, unfortunately.")
+        return [('msg', str(msg['message'] + "? " + "I can't give you those, unfortunately."))]
     # 8 Ball
     elif re.search('8.*ball.*\?' ,msg['message'], re.IGNORECASE) is not None:
-        return 'msg', (random.choice(eightBallChoice)).decode('rot13')
+        return [('msg', (random.choice(eightBallChoice)).decode('rot13'))]
     # Wow
     elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
         now = datetime.now()
@@ -121,44 +121,44 @@ def do(msg):
             response = requests.get(random.choice(wowurl))
             wowimage.write(response.content)
             wowimage.close()
-            return 'send_photo', wowimage.name
+            return [('send_photo', wowimage.name)]
         else:
-          return 'msg', "ಠ_ಠ"
+          return [('msg', "ಠ_ಠ")]
     # Simpsons References
     elif re.search('dog danglin', msg['message'], re.IGNORECASE) is not None:
         simpsonsimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get(simpsonsurl[0])
         simpsonsimage.write(response.content)
         simpsonsimage.close()
-        return 'send_photo', simpsonsimage.name
+        return [('send_photo', simpsonsimage.name)]
     # Fuck this shit
     elif re.search('fuck this shit', msg['message'], re.IGNORECASE) is not None:
         fthisimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get("http://i.imgur.com/LjdgV8V.png")
         fthisimage.write(response.content)
         fthisimage.close()
-        return 'send_photo', fthisimage.name
+        return [('send_photo', fthisimage.name)]
     # Self Defense
     elif re.search('fuck', msg['message'], re.IGNORECASE) is not None and re.search(' ED', msg['message'], re.IGNORECASE) is not None:
         selfdefenseimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get(random.choice(defenseURL))
         selfdefenseimage.write(response.content)
         selfdefenseimage.close()
-        return 'send_photo', selfdefenseimage.name
+        return [('send_photo', selfdefenseimage.name)]
     # Diet
     elif re.search('diet', msg['message'], re.IGNORECASE) is not None:
         dietimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get("http://i.imgur.com/kZQDGNn.png")
         dietimage.write(response.content)
         dietimage.close()
-        return 'send_photo', dietimage.name
+        return [('send_photo', dietimage.name)]
     # Up yours children
     elif re.search('up', msg['message'], re.IGNORECASE) is not None and re.search('yours', msg['message'], re.IGNORECASE) is not None and re.search('children', msg['message'], re.IGNORECASE) is not None:
         upyoursimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get("http://i.imgur.com/am5PDx6.jpg")
         upyoursimage.write(response.content)
         upyoursimage.close()
-        return 'send_photo', upyoursimage.name
+        return [('send_photo', upyoursimage.name)]
     # IMGME
     elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE) is not None:
         now = datetime.now()
@@ -170,23 +170,23 @@ def do(msg):
             response = requests.get(imgurl)
             imgpath.write(response.content)
             imgpath.close()
-            return 'send_photo', imgpath.name
+            return [('send_photo', imgpath.name)]
         else:
-          return 'msg', "ಠ_ಠ"
+          return [('msg', "ಠ_ಠ")]
     elif re.search('ED.*\?' ,msg['message'], re.IGNORECASE) is not None:
         if re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE) is not None:
             match = re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE)
             try:
                 lookup = wikipedia.summary(match.group(2), sentences=2)
-                return 'msg', lookup.encode('utf-8', 'replace')
+                return [('msg', lookup.encode('utf-8', 'replace'))]
             except:
-                return 'msg', "Can't find it. Guess it will remain a mystery."
+                return [('msg', "Can't find it. Guess it will remain a mystery.")]
     #Peacekeeper
     elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
-        return 'msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13'))
+        return [('msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13')))]
     # Colin
     elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
-        return 'msg', (random.choice(colinChoice)).decode('rot13')
+        return [('msg', (random.choice(colinChoice)).decode('rot13'))]
     # Urban Dictionary definitions
     elif (re.search('define' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define" is in the message AND message is more than one word.
         defkeyword = str(msg['message']).split(' ', 1)[0]
@@ -205,16 +205,16 @@ def do(msg):
                         word = item['word']
                         example = item['example']
                         if example:                                                 #if the definition also has an example then show it
-                            return 'msg', (word + ": " + definition + ".          " + "EXAMPLE: " + example).encode('utf-8', 'replace')
+                            return [('msg', (word + ": " + definition + ".").encode('utf-8', 'replace')), ('msg', ("EXAMPLE: " + example).encode('utf-8', 'replace'))]
                         else:
-                            return 'msg', (word + ": " + definition).encode('utf-8', 'replace')
+                            return [('msg', (word + ": " + definition).encode('utf-8', 'replace'))]
                 else:
-                    return 'msg', "Sorry, but I couldn't find a definition for that word."
+                    return [('msg', "Sorry, but I couldn't find a definition for that word.")]
             else:
-                return 'msg', "Sorry, you'll have to wait ~15 seconds to look up another definition."
+                return [('msg', "Sorry, you'll have to wait ~15 seconds to look up another definition.")]
         else:
-                return 'msg', ''
+                return [('msg', '')]
 
     # Ignore everything else
     else:
-        return 'msg', ''
+        return [('msg', '')]
