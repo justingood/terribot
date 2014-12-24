@@ -22,6 +22,8 @@ os.system("/usr/bin/killall telegram")
 config = ConfigParser.RawConfigParser()
 config.read('config.cfg')
 
+twitter_disabled = False
+
 deployment = os.getenv('DEPLOYMENT')
 if deployment is None:
     deployment = 'development'
@@ -29,6 +31,14 @@ if deployment is None:
 telegram_dir = config.get(deployment, 'telegram_dir')
 bot_id = config.get(deployment, 'bot_id')
 watch_rooms = config.get(deployment, 'watch_rooms')
+try:
+    twitter_token = config.get(deployment, 'twitter_token')
+    twitter_token_key = config.get(deployment, 'twitter_token_key')
+    twitter_consecret = config.get(deployment, 'twitter_consecret')
+    twitter_consecretkey = config.get(deployment, 'twitter_consecretkey')
+except:
+    print "Couldn't load twitter."
+    twitter_disabled = True
 
 QUIT = False
 
