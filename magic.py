@@ -45,7 +45,7 @@ def randomtweet(twitteruser):
     else:
         try:
             print "Grabbit Twitter result..."
-            result = random.choice(tweetlink.statuses.user_timeline(count=100, user_id=twitteruser))['text']
+            result = random.choice(tweetlink.statuses.user_timeline(count=200, user_id=twitteruser))['text']
             return result.encode('utf-8', 'ignore')
         except:
             return ''
@@ -132,6 +132,13 @@ def do(msg):
     elif re.search('.*modern seinfeld.*' ,msg['message'], re.IGNORECASE) is not None:
         if not terribot.twitter_disabled:
             result = randomtweet('1000262514')
+            return [('msg', result)]
+        else:
+            return [('msg', '')]
+    # Hard Sci-Fi Tweets
+    elif re.search('.*hard.*sci-fi.*' ,msg['message'], re.IGNORECASE) is not None:
+        if not terribot.twitter_disabled:
+            result = randomtweet('1947072912')
             return [('msg', result)]
         else:
             return [('msg', '')]
