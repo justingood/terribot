@@ -18,6 +18,7 @@ import tempfile
 import pickledb
 from gimage import get_image_url
 import wikipedia
+from twitter import *
 
 colinChoice = ['Jub\'f guvf Pbyva crefba lbh thlf xrrc gnyxvat nobhg?', 'Pbyva? Jub\'f gung?', 'Jung\'f n Pbyva?', 'Lbh thlf xrrc fnlvat gung anzr...', 'V unir ab vqrn jub lbh\'er gnyxvat nobhg.', 'Fgbc znxvat hc vzntvanel cbrcyr.', 'Guvf Pbyva thl fbhaqf nf vzntvanel nf uhzna serr jvyy', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',]
 pingChoice = ['V\'z trggvat gverq bs cbatvat', 'Fgbc vg', 'cbat', 'cbat', 'cbat', 'Qb lbh svaq guvf nzhfvat?', 'cbat', 'Cbat', 'Doreg', 'cbat', 'Abg evtug abj, V\'ir tbg n urnqnpur.', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat', 'cbat']
@@ -29,11 +30,26 @@ defenseURL = ['http://i.imgur.com/WvxdOOL.jpg', 'http://i.imgur.com/cqC5Tpu.jpg'
 #Init PickleDB
 pagingdb = pickledb.load('pagingdb.db', False)
 
+#Initialize Twitter
+if not terribot.twitter_disabled:
+    tweetlink = Twitter(auth=OAuth(terribot.twitter_token, terribot.twitter_token_key, terribot.twitter_consecret, terribot.twitter_consecretkey))
+
 from pytg.utils import coroutine, broadcast
 from pytg.tg import (
     dialog_list, chat_info, message, user_status,
     )
 
+def randomtweet(twitteruser):
+    if terribot.twitter_disabled:
+        print "Looks like the Twitter credentials haven't been provided. Can't retrieve Tweets."
+    else:
+        try:
+            print "Grabbit Twitter result..."
+            result = random.choice(tweetlink.statuses.user_timeline(count=100, user_id=twitteruser))['text']
+            return result.encode('utf-8', 'ignore')
+        except:
+            return ''
+    
 
 def direct(msg):
     if re.match('^help.*', msg['message'], re.IGNORECASE) is not None:
@@ -112,6 +128,13 @@ def do(msg):
     # 8 Ball
     elif re.search('8.*ball.*\?' ,msg['message'], re.IGNORECASE) is not None:
         return [('msg', (random.choice(eightBallChoice)).decode('rot13'))]
+    # Modern Seinfeld tweets
+    elif re.search('.*modern seinfeld.*' ,msg['message'], re.IGNORECASE) is not None:
+        if not terribot.twitter_disabled:
+            result = randomtweet('1000262514')
+            return [('msg', result)]
+        else:
+            return [('msg', '')]
     # Wow
     elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
         now = datetime.now()

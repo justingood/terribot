@@ -14,3 +14,4 @@ pickledb==0.3
 configparser==3.5.0b2
 gImage==1.0.1
 wikipedia==1.4.0
+twitter==1.15.0
