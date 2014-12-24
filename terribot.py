@@ -87,6 +87,7 @@ def command_parser(chat_group, tg):
                     if botfunction == 'send_text':
                         tg.send_text(msg['cmdgroup'], resultdata)
                     print "The previous message was: %s" % lastMessage[0]
+                    time.sleep(0.2)
                     lastMessage.pop()
                     lastMessage.appendleft(msg['message'])
     except GeneratorExit:
