@@ -49,7 +49,7 @@ def randomtweet(twitteruser):
             return result.encode('utf-8', 'ignore')
         except:
             return ''
-    
+
 
 def direct(msg):
     if re.match('^help.*', msg['message'], re.IGNORECASE) is not None:
@@ -132,6 +132,13 @@ def do(msg):
     elif re.search('.*modern seinfeld.*' ,msg['message'], re.IGNORECASE) is not None:
         if not terribot.twitter_disabled:
             result = randomtweet('1000262514')
+            return [('msg', result)]
+        else:
+            return [('msg', '')]
+    # Esports Seinfeld tweets
+    elif re.search('.*esports seinfeld.*' ,msg['message'], re.IGNORECASE) is not None:
+        if not terribot.twitter_disabled:
+            result = randomtweet('2873473157')
             return [('msg', result)]
         else:
             return [('msg', '')]
