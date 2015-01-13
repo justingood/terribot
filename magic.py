@@ -203,6 +203,10 @@ def do(msg):
             terribot.last_imgme = now
             match = re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE)
             imgurl = get_image_url(match.group(1))
+            try:
+              print "Image URL is: %s" % imgurl
+            except:
+              print "Failed getting the image URL"
             imgpath = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
             response = requests.get(imgurl)
             imgpath.write(response.content)
