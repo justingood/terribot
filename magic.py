@@ -149,6 +149,13 @@ def do(msg):
             return [('msg', result)]
         else:
             return [('msg', '')]
+    # Stats Canada
+    elif re.search('.*statscan.*' ,msg['message'], re.IGNORECASE) is not None:
+        if not terribot.twitter_disabled:
+            result = randomtweet('701267743')
+            return [('msg', result)]
+        else:
+            return [('msg', '')]
     # Wow
     elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
         now = datetime.now()
