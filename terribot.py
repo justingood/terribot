@@ -15,11 +15,11 @@ from pytg.tg import (
 )
 import magic
 from collections import deque
-import ConfigParser
+import configparser
 
 os.system("/usr/bin/killall telegram")
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read('config.cfg')
 
 twitter_disabled = False
@@ -37,7 +37,7 @@ try:
     twitter_consecret = config.get(deployment, 'twitter_consecret')
     twitter_consecretkey = config.get(deployment, 'twitter_consecretkey')
 except:
-    print "Couldn't load twitter."
+    print("Couldn't load twitter.")
     twitter_disabled = True
 
 QUIT = False
@@ -55,15 +55,15 @@ def command_parser(chat_group, tg):
     last_ping = None
     # To avoid ping flood attack, we'll respond to ping once every 10 sec
     mydelta = timedelta(seconds=10)
-    print "Ready and awaiting orders.\n\n"
+    print("Ready and awaiting orders.\n\n")
     try:
         while True:
             msg = (yield)
             # Only process if the group name match
-            print msg
+            print(msg)
             if msg['peer'] == "user":
                 #don't crash
-                print "getting result"
+                print("getting result")
                 result = magic.direct(msg)
                 if botfunction == 'usr_msg':
                   tg.msg(msg['cmduser'], resultdata)
@@ -86,7 +86,7 @@ def command_parser(chat_group, tg):
                         tg.send_video(msg['cmdgroup'], resultdata)
                     if botfunction == 'send_text':
                         tg.send_text(msg['cmdgroup'], resultdata)
-                    print "The previous message was: %s" % lastMessage[0]
+                    print("The previous message was: %s" % lastMessage[0])
                     time.sleep(0.2)
                     lastMessage.pop()
                     lastMessage.appendleft(msg['message'])
@@ -96,18 +96,18 @@ def command_parser(chat_group, tg):
 
 if __name__ == '__main__':
     if telegram_dir is None:
-        print "You must set the telegram_dir configuration option."
+        print("You must set the telegram_dir configuration option.")
         sys.exit()
     else:
         telegram = telegram_dir.rstrip("/") + "/telegram"
         pubkey = telegram_dir.rstrip("/") + "/tg.pub"
 
     if bot_id is None:
-        print "You need to set the bot_id configuration option."
+        print("You need to set the bot_id configuration option.")
         sys.exit()
 
     if watch_rooms is None:
-        print "You need to set the watch_rooms configuration option."
+        print("You need to set the watch_rooms configuration option.")
         sys.exit()
     #This grpuid stuff has to change to wach_rooms list.
     else:
@@ -130,6 +130,6 @@ if __name__ == '__main__':
             if QUIT == True:
                 break
     except KeyboardInterrupt:
-        print "\nCuriously enough, the only thing that went through the mind of the bowl of petunias as it fell was Oh no, not again."
+        print("\nCuriously enough, the only thing that went through the mind of the bowl of petunias as it fell was Oh no, not again.")
     # Quit gracefully
     tg.quit()

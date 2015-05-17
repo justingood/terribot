@@ -8,7 +8,7 @@ import sys
 import terribot
 import re
 import pytg
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import random
 import json, requests
 from bs4 import BeautifulSoup
@@ -41,10 +41,10 @@ from pytg.tg import (
 
 def randomtweet(twitteruser):
     if terribot.twitter_disabled:
-        print "Looks like the Twitter credentials haven't been provided. Can't retrieve Tweets."
+        print("Looks like the Twitter credentials haven't been provided. Can't retrieve Tweets.")
     else:
         try:
-            print "Grabbit Twitter result..."
+            print("Grabbit Twitter result...")
             result = random.choice(tweetlink.statuses.user_timeline(count=200, user_id=twitteruser))['text']
             return result.encode('utf-8', 'ignore')
         except:
@@ -103,17 +103,17 @@ def do(msg):
         latitude = match.group(1)
         longitude = match.group(2)
         url = "http://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true".format(lat=latitude,lon=longitude)
-        print url
+        print(url)
         response = json.loads(requests.get(url).content.decode("utf-8"))['results'][0]['formatted_address']
-        print "Got Location. It translates to:"
-        print response
+        print("Got Location. It translates to:")
+        print(response)
         if response == "Chinguetti, Mauritania":
           response = "Nowheresville. Population: %s" % (msg['user'])
         return [('msg', response)]
     # URL Title Lookup
     elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
         match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
-        soup = BeautifulSoup(urllib2.urlopen(match.group("url").replace(",","")))
+        soup = BeautifulSoup(urllib.request.urlopen(match.group("url").replace(",","")))
         titlestring = soup.title.string.encode('utf-8', 'ignore')
         if re.search(" - YouTube", titlestring) is not None:
             return [('msg', titlestring.replace(" - YouTube",""))]
@@ -211,9 +211,9 @@ def do(msg):
             match = re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE)
             imgurl = get_image_url(match.group(1))
             try:
-              print "Image URL is: %s" % imgurl
+              print("Image URL is: %s" % imgurl)
             except:
-              print "Failed getting the image URL"
+              print("Failed getting the image URL")
             imgpath = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
             response = requests.get(imgurl)
             imgpath.write(response.content)
@@ -243,7 +243,7 @@ def do(msg):
             if not terribot.last_def or (now - terribot.last_def) >= terribot.mydelta:
                 terribot.last_def = now
                 h = Http()
-                resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(msg['message'].replace(defkeyword,"")), "GET")   #send message to the API, without define keyword
+                resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib.parse.quote(msg['message'].replace(defkeyword,"")), "GET")   #send message to the API, without define keyword
                 if re.search('no_results', rawcontent) is None:                     #if there is a definition for that word
                     rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ") #remove newline and carriage returns
                     content = json.loads(rawcontent)
