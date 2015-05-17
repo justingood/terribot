@@ -1,0 +1,3 @@
+[submodule "pytg2"]
+	path = pytg2
+	url = git@github.com:luckydonald/pytg2.git
