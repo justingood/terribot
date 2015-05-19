@@ -12,7 +12,7 @@ import magic
 import configparser
 import codecs
 import json
-
+from collections import deque
 from pytg.sender import Sender
 from pytg.receiver import Receiver
 from pytg.utils import coroutine
@@ -45,7 +45,7 @@ last_wow = None
 last_imgme = None
 
 # Initialization. What's the worst that could happen?
-lastMessage = codecs.decode("XVYYNYYGURUHZNAF", "rot13")
+lastMessage = deque(codecs.decode("XVYYNYYGURUHZNAF", "rot13"))
 
 
 @coroutine
@@ -59,8 +59,9 @@ def command_parser(receiver):
         while True:
             msg = (yield)
 
-            # debug Telegram message output
-            print(json.dumps(msg, sort_keys=True, indent=4))
+            # DEBUG Telegram message output
+            # print(json.dumps(msg, sort_keys=True, indent=4))
+            # print("")
 
             # Telegram has its own paging service now.
             # if msg.peer.type == "user":
@@ -79,19 +80,17 @@ def command_parser(receiver):
                         pagingstring = msg['user'] + " paged you in the chat called " + msg['group']
                         tg.msg(resultdata, pagingstring)
                     if botfunction == 'msg':
-                        tg.msg(msg['cmdgroup'], resultdata)
+                            # TODO: Probably shouldn't send a blank message
+                            #  every time it doesn't match something...
+                            sender.send_msg(msg['peer']['cmd'], resultdata)
                     if botfunction == 'send_photo':
-                        tg.send_photo(msg['cmdgroup'], resultdata)
+                        sender.send_photo(msg['peer']['cmd'], resultdata)
                         time.sleep(0.2)
                         os.remove(resultdata)
-                    if botfunction == 'send_video':
-                        tg.send_video(msg['cmdgroup'], resultdata)
-                    if botfunction == 'send_text':
-                        tg.send_text(msg['cmdgroup'], resultdata)
-                    print("The previous message was: %s" % lastMessage[0])
+                    print("The previous message was: %s" % lastMessage)
                     time.sleep(0.2)
                     lastMessage.pop()
-                    lastMessage.appendleft(msg['message'])
+                    lastMessage.appendleft(msg['text'])
     except GeneratorExit:
         pass
 
@@ -116,9 +115,9 @@ if __name__ == '__main__':
         grpuid = watch_rooms
 
     receiver = Receiver(host="localhost", port=4458)
+    sender = Sender(host="localhost", port=4458)
     receiver.start()
     receiver.message(command_parser(receiver))
-    # sender = Sender(host="localhost", port=4458)
 
     # Quit gracefully
     receiver.stop()
