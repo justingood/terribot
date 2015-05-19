@@ -44,8 +44,9 @@ last_def = None
 last_wow = None
 last_imgme = None
 
+# TODO: This works different in Python3. Fix it.
 # Initialization. What's the worst that could happen?
-lastMessage = deque(codecs.decode("XVYYNYYGURUHZNAF", "rot13"))
+# lastMessage = deque(codecs.decode("XVYYNYYGURUHZNAF", "rot13"))
 
 
 @coroutine
@@ -62,7 +63,10 @@ def command_parser(receiver):
             # DEBUG Telegram message output
             # print(json.dumps(msg, sort_keys=True, indent=4))
             # print("")
-
+            print("Group: " + json.dumps(msg['peer']['cmd']))
+            print("User: " + json.dumps(msg['sender']['name']))
+            print("Text: " + json.dumps(msg['text']))
+            print('')
             # Telegram has its own paging service now.
             # if msg.peer.type == "user":
             #    print("getting result")
@@ -87,10 +91,10 @@ def command_parser(receiver):
                         sender.send_photo(msg['peer']['cmd'], resultdata)
                         time.sleep(0.2)
                         os.remove(resultdata)
-                    print("The previous message was: %s" % lastMessage)
+                    # print("The previous message was: %s" % lastMessage)
                     time.sleep(0.2)
-                    lastMessage.pop()
-                    lastMessage.appendleft(msg['text'])
+                    # lastMessage.pop()
+                    # lastMessage.appendleft(msg['text'])
     except GeneratorExit:
         pass
 
