@@ -2,7 +2,7 @@
 DateTime==4.0.1
 argparse==1.2.1
 pytz==2014.2
-wsgiref==0.1.2
+#wsgiref==0.1.2
 zope.interface==4.1.1
 beautifulsoup4==4.3.2
 requests==2.2.1

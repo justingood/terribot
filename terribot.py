@@ -7,17 +7,15 @@ A terrible Telegram bot. NOT Three-Law compatible.
 import sys
 import os
 import time
-from datetime import datetime, timedelta
-import pytg
-from pytg.utils import coroutine, broadcast
-from pytg.tg import (
-    dialog_list, chat_info, message, user_status,
-)
+from datetime import timedelta
 import magic
-from collections import deque
 import configparser
+import codecs
+import json
 
-os.system("/usr/bin/killall telegram")
+from pytg.sender import Sender
+from pytg.receiver import Receiver
+from pytg.utils import coroutine
 
 config = configparser.RawConfigParser()
 config.read('config.cfg')
@@ -46,11 +44,12 @@ last_def = None
 last_wow = None
 last_imgme = None
 
-#Initialization. What's the worst that could happen?
-lastMessage = deque([('XVYYNYYGURUHZNAF'.decode('rot13'))])
+# Initialization. What's the worst that could happen?
+lastMessage = codecs.decode("XVYYNYYGURUHZNAF", "rot13")
+
 
 @coroutine
-def command_parser(chat_group, tg):
+def command_parser(receiver):
     global QUIT
     last_ping = None
     # To avoid ping flood attack, we'll respond to ping once every 10 sec
@@ -59,18 +58,21 @@ def command_parser(chat_group, tg):
     try:
         while True:
             msg = (yield)
-            # Only process if the group name match
-            print(msg)
-            if msg['peer'] == "user":
-                #don't crash
-                print("getting result")
-                result = magic.direct(msg)
-                if botfunction == 'usr_msg':
-                  tg.msg(msg['cmduser'], resultdata)
 
-            elif msg['gid'] in watch_rooms and msg['uid'] != bot_id:
+            # debug Telegram message output
+            print(json.dumps(msg, sort_keys=True, indent=4))
+
+            # Telegram has its own paging service now.
+            # if msg.peer.type == "user":
+            #    print("getting result")
+            #    result = magic.direct(msg)
+            #    if botfunction == 'usr_msg':
+            #        tg.msg(msg['cmduser'], resultdata)
+
+            if not msg.own:
                 result = magic.do(msg)
-                #validate the result type and send it along it to the appropriate handler.
+                # Validate the result type and send it along it to the
+                # appropriate handler.
                 # results will look like = [('a', 'A'), ('b', 'B')]
                 for i, (botfunction, resultdata) in enumerate(result):
                     if botfunction == 'usr_msg':
@@ -99,8 +101,8 @@ if __name__ == '__main__':
         print("You must set the telegram_dir configuration option.")
         sys.exit()
     else:
-        telegram = telegram_dir.rstrip("/") + "/telegram"
-        pubkey = telegram_dir.rstrip("/") + "/tg.pub"
+        telegram = telegram_dir.rstrip("/") + "/bin/telegram-cli"
+        pubkey = telegram_dir.rstrip("/") + "/tg-server.pub"
 
     if bot_id is None:
         print("You need to set the bot_id configuration option.")
@@ -109,27 +111,14 @@ if __name__ == '__main__':
     if watch_rooms is None:
         print("You need to set the watch_rooms configuration option.")
         sys.exit()
-    #This grpuid stuff has to change to wach_rooms list.
+    # This grpuid stuff has to change to watch_rooms list.
     else:
         grpuid = watch_rooms
 
-    tg = pytg.Telegram(telegram, pubkey)
-    pipeline = message(command_parser(grpuid, tg))
+    receiver = Receiver(host="localhost", port=4458)
+    receiver.start()
+    receiver.message(command_parser(receiver))
+    # sender = Sender(host="localhost", port=4458)
 
-    # Register our processing pipeline
-    tg.register_pipeline(pipeline)
-
-    # Start telegram cli
-    tg.start()
-    try:
-	while True:
-            # Keep on polling so that messages will pass through our pipeline, but don't peg the CPU
-	    time.sleep(0.001)
-            tg.poll()
-
-            if QUIT == True:
-                break
-    except KeyboardInterrupt:
-        print("\nCuriously enough, the only thing that went through the mind of the bowl of petunias as it fell was Oh no, not again.")
     # Quit gracefully
-    tg.quit()
+    receiver.stop()

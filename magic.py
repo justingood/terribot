@@ -8,9 +8,12 @@ import sys
 import terribot
 import re
 import pytg
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 import random
-import json, requests
+import json
+import requests
 from bs4 import BeautifulSoup
 from httplib2 import Http
 from datetime import datetime, timedelta
@@ -27,7 +30,7 @@ wowurl = ['http://i.imgur.com/f07DJ1R.png', 'http://i.imgur.com/yXAnrTi.jpg', 'h
 simpsonsurl = ['http://i.imgur.com/KwVcdsL.png']
 defenseURL = ['http://i.imgur.com/WvxdOOL.jpg', 'http://i.imgur.com/cqC5Tpu.jpg', 'http://i.imgur.com/tEGzyzZ.gif', 'http://i.imgur.com/PpBCHaw.jpg', 'http://i.imgur.com/GrwH5k7.jpg', 'http://i.imgur.com/lhQtQ3P.jpg', 'http://i.imgur.com/ZqNlQTc.jpg', 'http://i.imgur.com/i64RTDP.jpg']
 
-#Init PickleDB
+# Init PickleDB
 pagingdb = pickledb.load('pagingdb.db', False)
 
 #Initialize Twitter
