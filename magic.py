@@ -8,15 +8,19 @@ import sys
 import terribot
 import re
 import pytg
-import urllib2
+import urllib.request
+import urllib.error
+import urllib.parse
 import random
-import json, requests
+import json
+import requests
 from bs4 import BeautifulSoup
 from httplib2 import Http
 from datetime import datetime, timedelta
 import tempfile
-import pickledb
-from gimage import get_image_url
+import codecs
+# import pickledb
+# from gimage import get_image_url
 import wikipedia
 from twitter import *
 
@@ -27,51 +31,51 @@ wowurl = ['http://i.imgur.com/f07DJ1R.png', 'http://i.imgur.com/yXAnrTi.jpg', 'h
 simpsonsurl = ['http://i.imgur.com/KwVcdsL.png']
 defenseURL = ['http://i.imgur.com/WvxdOOL.jpg', 'http://i.imgur.com/cqC5Tpu.jpg', 'http://i.imgur.com/tEGzyzZ.gif', 'http://i.imgur.com/PpBCHaw.jpg', 'http://i.imgur.com/GrwH5k7.jpg', 'http://i.imgur.com/lhQtQ3P.jpg', 'http://i.imgur.com/ZqNlQTc.jpg', 'http://i.imgur.com/i64RTDP.jpg']
 
-#Init PickleDB
-pagingdb = pickledb.load('pagingdb.db', False)
+# Init PickleDB
+# pagingdb = pickledb.load('pagingdb.db', False)
 
 #Initialize Twitter
 if not terribot.twitter_disabled:
     tweetlink = Twitter(auth=OAuth(terribot.twitter_token, terribot.twitter_token_key, terribot.twitter_consecret, terribot.twitter_consecretkey))
 
-from pytg.utils import coroutine, broadcast
-from pytg.tg import (
-    dialog_list, chat_info, message, user_status,
-    )
+# from pytg.utils import coroutine, broadcast
+# from pytg.tg import (
+#    dialog_list, chat_info, message, user_status,
+#    )
 
 def randomtweet(twitteruser):
     if terribot.twitter_disabled:
-        print "Looks like the Twitter credentials haven't been provided. Can't retrieve Tweets."
+        print("Looks like the Twitter credentials haven't been provided. Can't retrieve Tweets.")
     else:
         try:
-            print "Grabbit Twitter result..."
+            print("Grabbit Twitter result...")
             result = random.choice(tweetlink.statuses.user_timeline(count=200, user_id=twitteruser))['text']
             return result.encode('utf-8', 'ignore')
         except:
             return ''
 
 
-def direct(msg):
-    if re.match('^help.*', msg['message'], re.IGNORECASE) is not None:
-        return [('usr_msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list].")]
-    if re.match('^list.*', msg['message'], re.IGNORECASE) is not None:
-        return [('usr_msg', "yeah, sorry, the thing is I can't do that until pickledb 0.4 is released...")]
-    if re.match('^Enable @.*', msg['message'], re.IGNORECASE) is not None:
-         pagerkey = str(msg['message']).split(' ',1)[1]
-         pagingdb.set(pagerkey.lower(), msg['cmduser'])
-         pagingdb.dump()
-         return [('usr_msg', "Added %s as a pager to send to you!" % msg['message'].split(' ', 1)[1].lower())]
-    if re.match('^Disable @.*', msg['message'], re.IGNORECASE) is not None:
-         pagerkey = str(msg['message']).split(' ',1)[1]
-         pagerentry = pagingdb.get(pagerkey.lower())
-         if pagerentry == msg['cmduser']:
-             pagingdb.rem(pagerkey.lower())
-             pagingdb.dump()
-             return [('usr_msg', "I've removed paging for %s" % pagerkey.lower())]
-         else:
-             return [('usr_msg', "Sorry, you're not the same user that signed up for this pager key")]
-    else:
-        return [('usr_msg', '')]
+#def direct(msg):
+#    if re.match('^help.*', msg['text'], re.IGNORECASE) is not None:
+#        return [('usr_msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list].")]
+#    if re.match('^list.*', msg['text'], re.IGNORECASE) is not None:
+#        return [('usr_msg', "yeah, sorry, the thing is I can't do that until pickledb 0.4 is released...")]
+#    if re.match('^Enable @.*', msg['text'], re.IGNORECASE) is not None:
+#         pagerkey = str(msg['text']).split(' ',1)[1]
+#         pagingdb.set(pagerkey.lower(), msg['cmduser'])
+#         pagingdb.dump()
+#         return [('usr_msg', "Added %s as a pager to send to you!" % msg['text'].split(' ', 1)[1].lower())]
+#    if re.match('^Disable @.*', msg['text'], re.IGNORECASE) is not None:
+#         pagerkey = str(msg['text']).split(' ',1)[1]
+#         pagerentry = pagingdb.get(pagerkey.lower())
+#         if pagerentry == msg['cmduser']:
+#             pagingdb.rem(pagerkey.lower())
+#             pagingdb.dump()
+#             return [('usr_msg', "I've removed paging for %s" % pagerkey.lower())]
+#         else:
+#             return [('usr_msg', "Sorry, you're not the same user that signed up for this pager key")]
+#    else:
+#        return [('usr_msg', '')]
 
 
 def do(msg):
@@ -79,85 +83,84 @@ def do(msg):
     wowdelta = timedelta(minutes=2)
     imgmedelta = timedelta(seconds=15)
     # Ping
-    if re.match('ping' ,msg['message']) is not None:
-        return [('msg', (random.choice(pingChoice)).decode('rot13')), ('msg', 'Go ping yourself, while you\'re at it.')]
+    if re.match('ping', msg['text']) is not None:
+        return [('msg', codecs.decode((random.choice(pingChoice)), 'rot13')), ('msg', 'Go ping yourself, while you\'re at it.')]
     # Send photos when photo URLs are posted
-    elif re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['message']) is not None:
-        imgtype = (re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['message'])).group(0)
-        tmpimage = tempfile.NamedTemporaryFile(delete=False,suffix=imgtype)
-        response = requests.get(msg['message'])
-        tmpimage.write(response.content)
-        tmpimage.close()
-        return [('send_photo', tmpimage.name)]
+#    elif re.search("\.jpg|\.gif|\.gifv|\.png|\.jpeg$", msg['text']) is not None:
+#        imgtype = (re.search("\.jpg|\.gif|\.png|\.jpeg$", msg['text'])).group(0)
+#        tmpimage = tempfile.NamedTemporaryFile(delete=False,suffix=imgtype)
+#        response = requests.get(msg['text'])
+#        tmpimage.write(response.content)
+#        tmpimage.close()
+#        return [('send_photo', tmpimage.name)]
     # User Paging
-    elif re.search('^@.*', msg['message'], re.IGNORECASE) is not None:
-        pagerkey = str(msg['message']).split(' ', 1)[0]
-        paginguser = pagingdb.get(pagerkey.lower())
-        if paginguser is not None:
-            return [('usr_msg', paginguser)]
-        else:
-            return [('msg', '')]
+#    elif re.search('^@.*', msg['text'], re.IGNORECASE) is not None:
+#        pagerkey = str(msg['text']).split(' ', 1)[0]
+#        paginguser = pagingdb.get(pagerkey.lower())
+#        if paginguser is not None:
+#            return [('usr_msg', paginguser)]
+#        else:
+#            return [('msg', '')]
     # Map address lookup
-    elif re.search("\[geo\]", msg['message']) is not None:
-        match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['message'])
-        latitude = match.group(1)
-        longitude = match.group(2)
-        url = "http://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true".format(lat=latitude,lon=longitude)
-        print url
-        response = json.loads(requests.get(url).content.decode("utf-8"))['results'][0]['formatted_address']
-        print "Got Location. It translates to:"
-        print response
-        if response == "Chinguetti, Mauritania":
-          response = "Nowheresville. Population: %s" % (msg['user'])
-        return [('msg', response)]
+#    elif re.search("\[geo\]", msg['text']) is not None:
+#        match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['text'])
+#        latitude = match.group(1)
+#        longitude = match.group(2)
+#        url = "http://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true".format(lat=latitude,lon=longitude)
+#        print(url)
+#        response = json.loads(requests.get(url).content.decode("utf-8"))['results'][0]['formatted_address']
+#        print("Got Location. It translates to:")
+#        print(response)
+#        if response == "Chinguetti, Mauritania":
+#          response = "Nowheresville. Population: %s" % (msg['user'])
+#        return [('msg', response)]
     # URL Title Lookup
-    elif re.search("(?P<url>https?://[^\s]+)", msg['message']) is not None:
-        match = re.search("(?P<url>https?://[^\s]+)", msg['message'])
-        soup = BeautifulSoup(urllib2.urlopen(match.group("url").replace(",","")))
-        titlestring = soup.title.string.encode('utf-8', 'ignore')
-        if re.search(" - YouTube", titlestring) is not None:
-            return [('msg', titlestring.replace(" - YouTube",""))]
-        else:
-            return [('msg', titlestring)]
+#    elif re.search("(?P<url>https?://[^\s]+)", msg['text']) is not None:
+#        match = re.search("(?P<url>https?://[^\s]+)", msg['text'])
+#        soup = BeautifulSoup(urllib.request.urlopen(match.group("url").replace(",","")))
+#        titlestring = soup.title.string.encode('utf-8', 'ignore')
+#        if re.search(" - YouTube", titlestring) is not None:
+#            return [('msg', titlestring.replace(" - YouTube",""))]
+#        else:
+#            return [('msg', titlestring)]
     # Cat facts
-    elif re.search('(catfax)|(cat.?facts)', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('(catfax)|(cat.?facts)', msg['text'], re.IGNORECASE) is not None:
         return [('msg', json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0])]
+
     # Not cat facts
-    elif re.search('facts', msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) == 2:
-        return [('msg', str(msg['message'] + "? " + "I can't give you those, unfortunately."))]
+    elif re.search('facts', msg['text'], re.IGNORECASE) is not None and len(msg['text'].split()) == 2:
+        return [('msg', str(msg['text'] + "? " + "I can't give you those, unfortunately."))]
+
     # 8 Ball
-    elif re.search('8.*ball.*\?' ,msg['message'], re.IGNORECASE) is not None:
+    elif re.search('8.*ball.*\?' ,msg['text'], re.IGNORECASE) is not None:
         return [('msg', (random.choice(eightBallChoice)).decode('rot13'))]
+
     # Modern Seinfeld tweets
-    elif re.search('.*modern seinfeld.*' ,msg['message'], re.IGNORECASE) is not None:
+    elif re.search('.*modern seinfeld.*' ,msg['text'], re.IGNORECASE) is not None:
         if not terribot.twitter_disabled:
             result = randomtweet('1000262514')
             return [('msg', result)]
         else:
             return [('msg', '')]
-    # Esports Seinfeld tweets
-    elif re.search('.*esports seinfeld.*' ,msg['message'], re.IGNORECASE) is not None:
-        if not terribot.twitter_disabled:
-            result = randomtweet('2873473157')
-            return [('msg', result)]
-        else:
-            return [('msg', '')]
+
     # Hard Sci-Fi Tweets
-    elif re.search('.*hard.*sci-fi.*' ,msg['message'], re.IGNORECASE) is not None:
+    elif re.search('.*hard.*sci-fi.*' ,msg['text'], re.IGNORECASE) is not None:
         if not terribot.twitter_disabled:
             result = randomtweet('1947072912')
             return [('msg', result)]
         else:
             return [('msg', '')]
+
     # Stats Canada
-    elif re.search('.*statscan.*' ,msg['message'], re.IGNORECASE) is not None:
+    elif re.search('.*statscan.*' ,msg['text'], re.IGNORECASE) is not None:
         if not terribot.twitter_disabled:
             result = randomtweet('701267743')
             return [('msg', result)]
         else:
             return [('msg', '')]
+
     # Wow
-    elif re.search('wow', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('wow', msg['text'], re.IGNORECASE) is not None:
         now = datetime.now()
         if not terribot.last_wow or (now - terribot.last_wow) >= wowdelta:
             terribot.last_wow = now
@@ -168,100 +171,102 @@ def do(msg):
             return [('send_photo', wowimage.name)]
         else:
           return [('msg', "ಠ_ಠ")]
+
     # Simpsons References
-    elif re.search('dog danglin', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('dog danglin', msg['text'], re.IGNORECASE) is not None:
         simpsonsimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get(simpsonsurl[0])
         simpsonsimage.write(response.content)
         simpsonsimage.close()
         return [('send_photo', simpsonsimage.name)]
+
     # Fuck this shit
-    elif re.search('fuck this shit', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('fuck this shit', msg['text'], re.IGNORECASE) is not None:
         fthisimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get("http://i.imgur.com/LjdgV8V.png")
         fthisimage.write(response.content)
         fthisimage.close()
         return [('send_photo', fthisimage.name)]
+
     # Self Defense
-    elif re.search('fuck', msg['message'], re.IGNORECASE) is not None and re.search(' ED', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('fuck', msg['text'], re.IGNORECASE) is not None and re.search(' ED', msg['text'], re.IGNORECASE) is not None:
         selfdefenseimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get(random.choice(defenseURL))
         selfdefenseimage.write(response.content)
         selfdefenseimage.close()
         return [('send_photo', selfdefenseimage.name)]
+
     # Diet
-    elif re.search('diet', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('diet', msg['text'], re.IGNORECASE) is not None:
         dietimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get("http://i.imgur.com/kZQDGNn.png")
         dietimage.write(response.content)
         dietimage.close()
         return [('send_photo', dietimage.name)]
+
     # Up yours children
-    elif re.search('up', msg['message'], re.IGNORECASE) is not None and re.search('yours', msg['message'], re.IGNORECASE) is not None and re.search('children', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('up', msg['text'], re.IGNORECASE) is not None and re.search('yours', msg['text'], re.IGNORECASE) is not None and re.search('children', msg['text'], re.IGNORECASE) is not None:
         upyoursimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
         response = requests.get("http://i.imgur.com/am5PDx6.jpg")
         upyoursimage.write(response.content)
         upyoursimage.close()
         return [('send_photo', upyoursimage.name)]
+
     # IMGME
-    elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE) is not None:
-        now = datetime.now()
-        if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
-            terribot.last_imgme = now
-            match = re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE)
-            imgurl = get_image_url(match.group(1))
-            try:
-              print "Image URL is: %s" % imgurl
-            except:
-              print "Failed getting the image URL"
-            imgpath = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
-            response = requests.get(imgurl)
-            imgpath.write(response.content)
-            imgpath.close()
-            return [('send_photo', imgpath.name)]
-        else:
-          return [('msg', "ಠ_ಠ")]
-    elif re.search('ED.*\?' ,msg['message'], re.IGNORECASE) is not None:
-        if re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE) is not None:
-            match = re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE)
-            try:
-                lookup = wikipedia.summary(match.group(2), sentences=2)
-                return [('msg', lookup.encode('utf-8', 'replace'))]
-            except:
-                return [('msg', "Can't find it. Guess it will remain a mystery.")]
+#    elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['text'], re.IGNORECASE) is not None:
+#        now = datetime.now()
+#        if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
+#            terribot.last_imgme = now
+#            match = re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['text'], re.IGNORECASE)
+#            imgurl = get_image_url(match.group(1))
+#            try:
+#              print("Image URL is: %s" % imgurl)
+#            except:
+#              print("Failed getting the image URL")
+#            imgpath = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+#            response = requests.get(imgurl)
+#            imgpath.write(response.content)
+#            imgpath.close()
+#            return [('send_photo', imgpath.name)]
+#        else:
+#          return [('msg', "ಠ_ಠ")]
+
     #Peacekeeper
-    elif re.search('fuck you' ,msg['message'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['message'], re.IGNORECASE) is not None:
-        return [('msg', ("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.".decode('rot13')))]
+    elif re.search('fuck you' ,msg['text'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['text'], re.IGNORECASE) is not None:
+        return [('msg', codecs.decode("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.", 'rot13'))]
+
     # Colin
-    elif re.search('colin' ,msg['message'], re.IGNORECASE) is not None:
-        return [('msg', (random.choice(colinChoice)).decode('rot13'))]
+    elif re.search('colin', msg['text'], re.IGNORECASE) is not None:
+        return [('msg', codecs.decode((random.choice(colinChoice)), 'rot13'))]
+
     # Urban Dictionary definitions
-    elif (re.search('define' ,msg['message'], re.IGNORECASE) is not None and len(msg['message'].split()) >1):  #if "define" is in the message AND message is more than one word.
-        defkeyword = str(msg['message']).split(' ', 1)[0]
-        if re.search('define', defkeyword, re.IGNORECASE):                                         #if define is the FIRST word, otherwise ignore it (so people can still use "define" in a sentence)
-            now = datetime.now()
-            if not terribot.last_def or (now - terribot.last_def) >= terribot.mydelta:
-                terribot.last_def = now
-                h = Http()
-                resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib2.quote(msg['message'].replace(defkeyword,"")), "GET")   #send message to the API, without define keyword
-                if re.search('no_results', rawcontent) is None:                     #if there is a definition for that word
-                    rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ") #remove newline and carriage returns
-                    content = json.loads(rawcontent)
-                    for item in content['list'][0:1]:
-                        definition = item['definition']                             #populate some variables
-                        permalink = item['permalink']
-                        word = item['word']
-                        example = item['example']
-                        if example:                                                 #if the definition also has an example then show it
-                            return [('msg', (word + ": " + definition + ".").encode('utf-8', 'replace')), ('msg', ("EXAMPLE: " + example).encode('utf-8', 'replace'))]
-                        else:
-                            return [('msg', (word + ": " + definition).encode('utf-8', 'replace'))]
-                else:
-                    return [('msg', "Sorry, but I couldn't find a definition for that word.")]
-            else:
-                return [('msg', "Sorry, you'll have to wait ~15 seconds to look up another definition.")]
-        else:
-                return [('msg', '')]
+#    elif (re.search('define' ,msg['text'], re.IGNORECASE) is not None and len(msg['text'].split()) >1):  #if "define" is in the message AND message is more than one word.
+#        defkeyword = str(msg['text']).split(' ', 1)[0]
+#        if re.search('define', defkeyword, re.IGNORECASE):                                         #if define is the FIRST word, otherwise ignore it (so people can still use "define" in a sentence)
+#            now = datetime.now()
+#            if not terribot.last_def or (now - terribot.last_def) >= terribot.mydelta:
+#                terribot.last_def = now
+#                h = Http()
+#                resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib.parse.quote(msg['text'].replace(defkeyword,"")), "GET")   #send message to the API, without define keyword
+#                if re.search('no_results', rawcontent) is None:                     #if there is a definition for that word
+#                    rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ") #remove newline and carriage returns
+#                    content = json.loads(rawcontent)
+#                    for item in content['list'][0:1]:
+#                        definition = item['definition']                             #populate some variables
+#                        permalink = item['permalink']
+#                        word = item['word']
+#                        example = item['example']
+#                        if example:                                                 #if the definition also has an example then show it
+#                            return [('msg', (word + ": " + definition + ".").encode('utf-8', 'replace')), ('msg', ("EXAMPLE: " + example).encode('utf-8', 'replace'))]
+#                        else:
+#                            return [('msg', (word + ": " + definition).encode('utf-8', 'replace'))]
+#                else:
+#                    return [('msg', "Sorry, but I couldn't find a definition for that word.")]
+#            else:
+#                return [('msg', "Sorry, you'll have to wait ~15 seconds to look up another definition.")]
+#
+#        else:
+#                return [('msg', '')]
 
     # Ignore everything else
     else:

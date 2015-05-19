@@ -1,17 +1,12 @@
-#Once we start extending our module list, this is where we'll keep track of the module requirements
-DateTime==4.0.1
-argparse==1.2.1
-pytz==2014.2
-wsgiref==0.1.2
-zope.interface==4.1.1
-beautifulsoup4==4.3.2
-requests==2.2.1
-#For urban dictionary lookup
-httplib2==0.8
-#For pickledb - I want 0.4 so we can print all contents. 0.3 is installed for now.
-pickledb==0.3
-#For config file
 configparser==3.5.0b2
-gImage==1.0.1
-wikipedia==1.4.0
+DateTime==4.0.1
+DictObject==0.1.1
+ez-setup==0.9
+httplib2==0.8
+beautifulsoup4==4.3.2
+pytg==0.4.1
+pytz==2014.2
+requests==2.2.1
 twitter==1.15.0
+wikipedia==1.4.0
+zope.interface==4.1.1
