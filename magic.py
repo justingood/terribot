@@ -239,34 +239,27 @@ def do(msg):
     elif re.search('colin', msg['text'], re.IGNORECASE) is not None:
         return [('msg', codecs.decode((random.choice(colinChoice)), 'rot13'))]
 
-    # Urban Dictionary definitions
-#    elif (re.search('define' ,msg['text'], re.IGNORECASE) is not None and len(msg['text'].split()) >1):  #if "define" is in the message AND message is more than one word.
-#        defkeyword = str(msg['text']).split(' ', 1)[0]
-#        if re.search('define', defkeyword, re.IGNORECASE):                                         #if define is the FIRST word, otherwise ignore it (so people can still use "define" in a sentence)
-#            now = datetime.now()
-#            if not terribot.last_def or (now - terribot.last_def) >= terribot.mydelta:
-#                terribot.last_def = now
-#                h = Http()
-#                resp, rawcontent = h.request("http://api.urbandictionary.com/v0/define?term=%s" % urllib.parse.quote(msg['text'].replace(defkeyword,"")), "GET")   #send message to the API, without define keyword
-#                if re.search('no_results', rawcontent) is None:                     #if there is a definition for that word
-#                    rawcontent = rawcontent.replace("\\r", " ").replace("\\n", " ") #remove newline and carriage returns
-#                    content = json.loads(rawcontent)
-#                    for item in content['list'][0:1]:
-#                        definition = item['definition']                             #populate some variables
-#                        permalink = item['permalink']
-#                        word = item['word']
-#                        example = item['example']
-#                        if example:                                                 #if the definition also has an example then show it
-#                            return [('msg', (word + ": " + definition + ".").encode('utf-8', 'replace')), ('msg', ("EXAMPLE: " + example).encode('utf-8', 'replace'))]
-#                        else:
-#                            return [('msg', (word + ": " + definition).encode('utf-8', 'replace'))]
-#                else:
-#                    return [('msg', "Sorry, but I couldn't find a definition for that word.")]
-#            else:
-#                return [('msg', "Sorry, you'll have to wait ~15 seconds to look up another definition.")]
-#
-#        else:
-#                return [('msg', '')]
+
+    # Urbandictionary
+    # TODO: rate-limiting
+    elif (re.search('define', msg['text'], re.IGNORECASE) is not None and len(msg['text'].split()) > 1):  # if "define" is in the message AND message is more than one word.
+        try:
+            searchterm = msg['text'].split(' ', 1)[1]
+            searchurl = "http://api.urbandictionary.com/v0/define?term=" + searchterm
+
+            response = requests.get(searchurl)
+            result = response.json()
+
+            word = json.dumps(result['list'][0]['word'])
+            definition = json.dumps(result['list'][0]['definition'])
+            example = json.dumps(result['list'][0]['example'])
+
+            defin = str(word) + ": " + str(definition)
+            exam = "example: " + str(example)
+
+            return [('msg', defin), ('msg', exam)]
+        except:
+            return [('msg', '')]
 
     # Ignore everything else
     else:
