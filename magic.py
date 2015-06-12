@@ -83,7 +83,7 @@ def do(msg):
     wowdelta = timedelta(minutes=2)
     imgmedelta = timedelta(seconds=15)
     # Ping
-    if re.match('ping', msg['text']) is not None:
+    if re.match('ping', msg['text'], re.IGNORECASE) is not None:
         return [('msg', codecs.decode((random.choice(pingChoice)), 'rot13')), ('msg', 'Go ping yourself, while you\'re at it.')]
     # Send photos when photo URLs are posted
 #    elif re.search("\.jpg|\.gif|\.gifv|\.png|\.jpeg$", msg['text']) is not None:
@@ -213,6 +213,7 @@ def do(msg):
         return [('send_photo', upyoursimage.name)]
 
     # IMGME
+<<<<<<< Updated upstream
 #    elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['text'], re.IGNORECASE) is not None:
 #        now = datetime.now()
 #        if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
@@ -231,6 +232,29 @@ def do(msg):
 #        else:
 #          return [('msg', "ಠ_ಠ")]
 
+=======
+    elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE) is not None:
+        now = datetime.now()
+        if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
+            terribot.last_imgme = now
+            match = re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE)
+            imgurl = get_image_url(match.group(1))
+            imgpath = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
+            response = requests.get(imgurl)
+            imgpath.write(response.content)
+            imgpath.close()
+            return 'send_photo', imgpath.name
+        else:
+          return 'msg', "ಠ_ಠ"
+    elif re.search('ED.*,' ,msg['message'], re.IGNORECASE) is not None:
+        if re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE) is not None:
+            match = re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE)
+            try:
+                lookup = wikipedia.summary(match.group(2), sentences=2)
+                return 'msg', lookup.encode('utf-8', 'replace')
+            except:
+                return 'msg', "Can't find it. Guess it will remain a mystery."
+>>>>>>> Stashed changes
     #Peacekeeper
     elif re.search('fuck you' ,msg['text'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['text'], re.IGNORECASE) is not None:
         return [('msg', codecs.decode("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.", 'rot13'))]
