@@ -213,7 +213,6 @@ def do(msg):
         return [('send_photo', upyoursimage.name)]
 
     # IMGME
-<<<<<<< Updated upstream
 #    elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['text'], re.IGNORECASE) is not None:
 #        now = datetime.now()
 #        if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
@@ -232,7 +231,6 @@ def do(msg):
 #        else:
 #          return [('msg', "ಠ_ಠ")]
 
-=======
     elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE) is not None:
         now = datetime.now()
         if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
@@ -254,7 +252,6 @@ def do(msg):
                 return 'msg', lookup.encode('utf-8', 'replace')
             except:
                 return 'msg', "Can't find it. Guess it will remain a mystery."
->>>>>>> Stashed changes
     #Peacekeeper
     elif re.search('fuck you' ,msg['text'], re.IGNORECASE) is not None or re.search('fuck off' ,msg['text'], re.IGNORECASE) is not None:
         return [('msg', codecs.decode("Url, url, url! Jr pna nyy svtug jura jr\'er qehax.", 'rot13'))]
