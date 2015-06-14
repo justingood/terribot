@@ -231,7 +231,7 @@ def do(msg):
 #        else:
 #          return [('msg', "ಠ_ಠ")]
 
-    elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['message'], re.IGNORECASE) is not None:
+    elif re.search('^ima?ge?(?:\s?me)?\s(.*)', msg['text'], re.IGNORECASE) is not None:
         now = datetime.now()
         if not terribot.last_imgme or (now - terribot.last_imgme) >= imgmedelta:
             terribot.last_imgme = now
@@ -244,7 +244,7 @@ def do(msg):
             return 'send_photo', imgpath.name
         else:
           return 'msg', "ಠ_ಠ"
-    elif re.search('ED.*,' ,msg['message'], re.IGNORECASE) is not None:
+    elif re.search('ED.*,' ,msg['text'], re.IGNORECASE) is not None:
         if re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE) is not None:
             match = re.search('(^who.*is.|^what.*is.|^what.*are.|^who.are.)(.*)', msg['message'], re.IGNORECASE)
             try:
@@ -280,7 +280,7 @@ def do(msg):
 
             return [('msg', defin), ('msg', exam)]
         except:
-            return [('msg', '')]
+            return [('msg', 'Your guess is as good as mine...')]
 
     # Ignore everything else
     else:
