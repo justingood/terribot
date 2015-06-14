@@ -63,10 +63,10 @@ def command_parser(receiver):
             # DEBUG Telegram message output
             # print(json.dumps(msg, sort_keys=True, indent=4))
             # print("")
-            print("Group: " + json.dumps(msg['peer']['cmd']))
-            print("User: " + json.dumps(msg['sender']['name']))
-            print("Text: " + json.dumps(msg['text']))
-            print('')
+            #print("Group: " + json.dumps(msg['peer']['cmd']))
+            #print("User: " + json.dumps(msg['sender']['name']))
+            #print("Text: " + json.dumps(msg['text']))
+            #print('')
             # Telegram has its own paging service now.
             # if msg.peer.type == "user":
             #    print("getting result")
