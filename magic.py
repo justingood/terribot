@@ -30,6 +30,7 @@ eightBallChoice = ['Vg vf pregnva', 'Vg vf qrpvqrqyl fb', 'Jvgubhg n qbhog', 'Lr
 wowurl = ['http://i.imgur.com/f07DJ1R.png', 'http://i.imgur.com/yXAnrTi.jpg', 'http://i.imgur.com/TitHeo5.jpg', 'http://i.imgur.com/wNu8lSl.png', 'http://i.imgur.com/5RQUwXF.gif', 'http://i.imgur.com/2tH0Cb1.png', 'http://i.imgur.com/XHk9NQw.jpg', 'http://i.imgur.com/LNcbRn2.jpg', 'http://i.imgur.com/wnvzgiW.jpg']
 simpsonsurl = ['http://i.imgur.com/KwVcdsL.png']
 defenseURL = ['http://i.imgur.com/WvxdOOL.jpg', 'http://i.imgur.com/cqC5Tpu.jpg', 'http://i.imgur.com/tEGzyzZ.gif', 'http://i.imgur.com/PpBCHaw.jpg', 'http://i.imgur.com/GrwH5k7.jpg', 'http://i.imgur.com/lhQtQ3P.jpg', 'http://i.imgur.com/ZqNlQTc.jpg', 'http://i.imgur.com/i64RTDP.jpg']
+fuckShiturl = ['https://i.imgur.com/TePrI2O.jpg', 'http://i.imgur.com/LjdgV8V.png']
 
 # Init PickleDB
 # pagingdb = pickledb.load('pagingdb.db', False)
@@ -183,7 +184,7 @@ def do(msg):
     # Fuck this shit
     elif re.search('fuck this shit', msg['text'], re.IGNORECASE) is not None:
         fthisimage = tempfile.NamedTemporaryFile(delete=False,suffix='.png')
-        response = requests.get("http://i.imgur.com/LjdgV8V.png")
+        response = requests.get(random.choice(fuckShiturl))
         fthisimage.write(response.content)
         fthisimage.close()
         return [('send_photo', fthisimage.name)]
