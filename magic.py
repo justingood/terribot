@@ -32,8 +32,6 @@ simpsonsurl = ['http://i.imgur.com/KwVcdsL.png']
 defenseURL = ['http://i.imgur.com/WvxdOOL.jpg', 'http://i.imgur.com/cqC5Tpu.jpg', 'http://i.imgur.com/tEGzyzZ.gif', 'http://i.imgur.com/PpBCHaw.jpg', 'http://i.imgur.com/GrwH5k7.jpg', 'http://i.imgur.com/lhQtQ3P.jpg', 'http://i.imgur.com/ZqNlQTc.jpg', 'http://i.imgur.com/i64RTDP.jpg']
 fuckShiturl = ['https://i.imgur.com/TePrI2O.jpg', 'http://i.imgur.com/LjdgV8V.png']
 
-# Init PickleDB
-# pagingdb = pickledb.load('pagingdb.db', False)
 
 #Initialize Twitter
 if not terribot.twitter_disabled:
@@ -56,27 +54,7 @@ def randomtweet(twitteruser):
             return ''
 
 
-#def direct(msg):
-#    if re.match('^help.*', msg['text'], re.IGNORECASE) is not None:
-#        return [('usr_msg', "To set up a pager, send me: [enable @<username>]. To remove a pager, send me: [disable @<username>]. If you'd like a list, send me: [list].")]
-#    if re.match('^list.*', msg['text'], re.IGNORECASE) is not None:
-#        return [('usr_msg', "yeah, sorry, the thing is I can't do that until pickledb 0.4 is released...")]
-#    if re.match('^Enable @.*', msg['text'], re.IGNORECASE) is not None:
-#         pagerkey = str(msg['text']).split(' ',1)[1]
-#         pagingdb.set(pagerkey.lower(), msg['cmduser'])
-#         pagingdb.dump()
-#         return [('usr_msg', "Added %s as a pager to send to you!" % msg['text'].split(' ', 1)[1].lower())]
-#    if re.match('^Disable @.*', msg['text'], re.IGNORECASE) is not None:
-#         pagerkey = str(msg['text']).split(' ',1)[1]
-#         pagerentry = pagingdb.get(pagerkey.lower())
-#         if pagerentry == msg['cmduser']:
-#             pagingdb.rem(pagerkey.lower())
-#             pagingdb.dump()
-#             return [('usr_msg', "I've removed paging for %s" % pagerkey.lower())]
-#         else:
-#             return [('usr_msg', "Sorry, you're not the same user that signed up for this pager key")]
-#    else:
-#        return [('usr_msg', '')]
+
 
 
 def do(msg):
@@ -94,14 +72,7 @@ def do(msg):
 #        tmpimage.write(response.content)
 #        tmpimage.close()
 #        return [('send_photo', tmpimage.name)]
-    # User Paging
-#    elif re.search('^@.*', msg['text'], re.IGNORECASE) is not None:
-#        pagerkey = str(msg['text']).split(' ', 1)[0]
-#        paginguser = pagingdb.get(pagerkey.lower())
-#        if paginguser is not None:
-#            return [('usr_msg', paginguser)]
-#        else:
-#            return [('msg', '')]
+
     # Map address lookup
 #    elif re.search("\[geo\]", msg['text']) is not None:
 #        match = re.search("=(-?[0-9]+.[0-9]+),(-?[0-9]+.[0-9]+)", msg['text'])
@@ -115,15 +86,7 @@ def do(msg):
 #        if response == "Chinguetti, Mauritania":
 #          response = "Nowheresville. Population: %s" % (msg['user'])
 #        return [('msg', response)]
-    # URL Title Lookup
-#    elif re.search("(?P<url>https?://[^\s]+)", msg['text']) is not None:
-#        match = re.search("(?P<url>https?://[^\s]+)", msg['text'])
-#        soup = BeautifulSoup(urllib.request.urlopen(match.group("url").replace(",","")))
-#        titlestring = soup.title.string.encode('utf-8', 'ignore')
-#        if re.search(" - YouTube", titlestring) is not None:
-#            return [('msg', titlestring.replace(" - YouTube",""))]
-#        else:
-#            return [('msg', titlestring)]
+
     # Cat facts
     elif re.search('(catfax)|(cat.?facts)', msg['text'], re.IGNORECASE) is not None:
         return [('msg', json.loads((requests.get(url='http://catfacts-api.appspot.com/api/facts')).content.decode("utf-8"))["facts"][0])]
