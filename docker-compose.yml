@@ -1,0 +1,12 @@
+tg:
+  image: justingood/tg
+  ports:
+    - "4458:4458"
+  volumes:
+    - .telegram-cli:/root/.telegram-cli
+    - /tmp:/tmp
+
+terribot:
+  build: .
+  links:
+    - tg

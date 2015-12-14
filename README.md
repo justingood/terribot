@@ -1,43 +1,52 @@
-terribot 
+Terribot
 ========
 [![Deployment status from dploy.io](https://dotjustin.dploy.io/badge/23779029942745/15143.png)](http://dploy.io)
 
 A terrible Telegram chat robot.
 
-#### Vagrant
-This is the easiest way to develop. First, get [Vagrant](https://www.vagrantup.com/) installed on your local machine. You'll probably want [Virtualbox](https://www.virtualbox.org/) too. Some sort of git client is probably a good idea too.
+# Using it
+This is a Python project, so if you're familiar with the language, you're ready to go. It depends on the [tg](https://github.com/vysheng/tg) [Telegram](https://telegram.org/) client, so you'll need that installed as well. tg should be run using the `--json -P 4458` argument. This will allow Terribot to communicate with the client.
 
-Then, you'll need to fork the repo via GitHub. It's at the top right of the page. Clone your fork to your machine, using the URL provided in the right-hand pane.
+## Docker
+I'm hoping to set this up with [Docker](https://www.docker.com/what-docker). There is a docker-compose file that can get you up and running quickly. However, there is currently an issue with one of the underlying python libraries that causes the CPU to spin out of control.
 
-Once that's done, go into the code directory on your machine, and issue a 
+For the time being, you can still run the **tg** container in Docker. Currently, the command I'm using to test is:
+`docker run -v $PWD/.telegram-cli:/root/.telegram-cli -v /tmp:/tmp -p 4458:4458 --net=host -it justingood/tg`
+
+I'll revisit this process at a later date to figure out a smoother way of handling it.
+
+# Developing
+If you want to work on the bot the plugins are probably what you'll want to deal with. Should be fairly straightforward.
+
+## Plugins
+Generally, this is probably what you'll want to edit. Each of the plugins in the **plugin** directory performs a function in response to a trigger phrase.
+
+### Anatomy of a Plugin
+When the program starts, it will automatically load the `.py` files in the **plugin** subdirectory, and record the attributes of each in a [TinyDB](https://github.com/msiemens/tinydb) database. The plugin must define certain attributes to be loaded correctly.
+
+As an example:
 ```
-vagrant up
-```
-and the base machine will be downloaded, and then bootstrapped. Take note of the ssh port.
+def setup():
+    return {'regex': "^test.*", 'act_on_event': 'message', 'cooldown': 10}
 
-After that, you'll want to SSH into the newly created machine using your favorite SSH client. The username will be **vagrant** and the password is also **vagrant**.
-
-Once in, you'll want to set up the telegram-cli client by changing to the directory with:
+def run(msg):
+    return ({'action': 'send_msg', 'payload': "test received"},)
 ```
-cd /home/vagrant/tg
-```
-Then set up your bot by running the client program using:
-```
-./telegram -k tg.pub
-```
-Follow the steps, and then issue a
-```
-safe_quit
-```
-to exit the client when that's done.
+* **setup()**
+ * This function defines the plugin attributes. It's activated when the program starts and loads all the plugins.
+ * It's expressed as a [dictionary](https://docs.python.org/3.5/tutorial/datastructures.html#dictionaries) of the attributes.
+ * Return Attributes (The values that get passed back to the bot):
+    * **regex**: The [regular expression](https://docs.python.org/3/library/re.html) that must be matched to activate the plugin.
+    * **act_on_event**: What type of Telegram incoming event this plugin should act upon. Currently, only text messages are supported, but this could be extended to act on other types fairly easily.
+    * **cooldown**: Every plugin is subject to a cooldown period to ensure a function is not spammed. If the default (_60s_) is too short or too long, then you can override the value here.
 
-An *auth* file is generated into the ```/home/vagrant/.telegram``` directory. You may want to back this up, so you can use it if you want to start from scratch again. If not, you can follow through the initial steps again.
+* **run(msg)**
+  * This function runs when the plugin is triggered, and is passed the full _msg_ from Telegram.
+  * The return value is what is sent back to the bot to pass onto the user/group.
+  * The return is provided as a [tuple](https://docs.python.org/3.5/tutorial/datastructures.html#tuples-and-sequences). Each message is one element in the tuple. This allows us to send more than one message in response, if we wish. When sending a single message response, make sure to include the trailing comma, to indicate that it is a single-element tuple.
+  * Return Attributes
+      * **action**: What the response should do. Currently, you are able to send a message, or a photo.
+      * **payload**: The actual response data. Usually this will be either text, or the path to an image.
 
-The code can be [edited](https://atom.io/) on your machine.
-Since the directory is available inside VM at ```/vagrant```, you can test your changes by going to the terribot directory and running the program.
-
-```cd /vagrant```
-
-```python terribot.py```
-
-Once you're happy with your changes, commit them, and create a pull request so that change can be merged into the live bot.
+  ## Getting Your Changes Into the Bot
+  [Fork](https://help.github.com/articles/fork-a-repo/) the repository to your own account and make your changes locally. Test them by running the bot locally. Then, send a [pull request](https://help.github.com/articles/creating-a-pull-request/) to get your changes merged and deployed.

@@ -1,0 +1,46 @@
+# Terribot's plugin system is fast and loose. Plugins are full-featured Python
+#   code. Any .py file in plugins/ is loaded and available to the bot.
+#
+# This example plugin should give you an idea how things work. The bot will
+#   respond to this plugin when someone starts a message with the
+#   word 'example'. It will return an example response.
+
+
+# The setup section is where we define how the plugin works. Generally, you
+#   will provide details on what regular expression (regex) to match in a
+#   user message. When this is matched, the bot will call the run function.
+def setup():
+    return {'regex': "^example.*", 'act_on_event': 'message', 'cooldown': 123}
+
+
+# This is the code that gets called from the bot when the plugin is triggered.
+# The bot will provide the full message in question, so the plugin can grab
+#   any data it needs. The actions the plugin can perform are unrestricted.
+#   Literally anything goes. The data that gets returned to the bot will be
+#   a response type and a message. Multiple actions are supported.
+def run(msg):
+    # As an example, we'll use built-in python functions to convert the
+    #   message to all uppercase letters.
+
+    # First we grab the text portion of the message
+    text_in_message = msg['text']
+    # Then we convert to uppercase
+    uppercase = text_in_message.upper()
+
+    # The response needs to correspond to a possible Telegram client 'action'. The list
+    # can be found at: https://github.com/vysheng/tg#supported-commands
+    # Not all are implemented in Terribot yet, but if it's needed the code can
+    #   be extended fairly easily.
+
+    # We'll send two messages:
+    # The first is just plain text
+    response1 = {'action': 'send_msg',
+                 'payload': "As an example, I'm sending your message back in uppercase: "}
+    # The second one is the user's previous message in uppercase.
+    response2 = {'action': 'send_msg', 'payload': uppercase}
+    # We will add these to a tuple, because that's what the bot expects.
+    finalresponse = (response1, response2)
+    # Finally, we will return this response to the bot.
+    return finalresponse
+
+    # The bot will handle the rest.
