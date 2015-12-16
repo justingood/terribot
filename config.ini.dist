@@ -1,5 +1,8 @@
 [twitter]
- token=token_goes_here
- token_key=token_key_goes_here
- consecret=consecret_goes_here
- consecretkey=consecretkey_goes_here
+ token=
+ token_key=
+ consecret=
+ consecretkey=
+[google]
+ key=
+ engine_id=
