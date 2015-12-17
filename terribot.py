@@ -85,10 +85,16 @@ class Terribot(object):
                 self.send_photo(sender, send_to, message['payload'])
 
     def send_msg(self, sender, send_to, payload):
-        sender.msg(send_to, payload)
+        try:
+            sender.msg(send_to, payload)
+        except (NoResponse, ConnectionError) as e:   # NOQA
+            print('Oops, had a connectivity problem while sending: ', send_to, payload, e)
 
     def send_photo(self, sender, send_to, filename):
-        sender.send_file(send_to, filename)
+        try:
+            sender.send_file(send_to, filename)
+        except (NoResponse, ConnectionError) as e:   # NOQA
+            print('Oops, had a connectivity problem while sending: ', send_to, filename, e)
         time.sleep(0.2)
         os.remove(filename)
 
