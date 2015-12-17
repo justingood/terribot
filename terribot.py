@@ -1,4 +1,6 @@
 import os
+import sys
+import signal
 import time
 import re
 import loadplugins
@@ -20,12 +22,17 @@ class Terribot(object):
     """A terrible Telegram chat bot"""
 
     def __init__(self):
+        signal.signal(signal.SIGTERM, self.sigterm_handler)
         receiver = Receiver(host='localhost', port=4458)
         sender = Sender(host='localhost', port=4458)
         receiver.start()
         receiver.message(self.listen(receiver, sender))
         print("Program exiting. Stopped at:", time.strftime("%Y/%m/%d-%H:%M:%S"))
         receiver.stop()
+
+    def sigterm_handler(self, signum, frame):
+        print("Received stop signal. Shutting down.")
+        sys.exit(0)
 
     @coroutine
     def listen(self, receiver, sender):

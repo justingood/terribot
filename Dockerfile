@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY . /app/
 
-CMD python terribot.py
+ENTRYPOINT ["python", "terribot.py"]
