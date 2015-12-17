@@ -1,5 +1,5 @@
 def setup():
-    return {'regex': "^ping.*", 'act_on_event': 'message'}
+    return {'regex': "^ping.*", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):

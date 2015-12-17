@@ -14,7 +14,7 @@ url = ['http://i.imgur.com/f07DJ1R.png',
 
 
 def setup():
-    return {'regex': "wow", 'act_on_event': 'message'}
+    return {'regex': "wow", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):

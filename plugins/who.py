@@ -20,7 +20,7 @@ whoRegex = "^" + whoUser + ".*"
 
 
 def setup():
-    return {'regex': whoRegex, 'act_on_event': 'message'}
+    return {'regex': whoRegex, 'act_on_event': 'message', 'cooldown': 2}
 
 
 def run(msg):

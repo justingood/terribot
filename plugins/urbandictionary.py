@@ -3,7 +3,7 @@ import requests
 
 
 def setup():
-    return {'regex': "^define.*", 'act_on_event': 'message'}
+    return {'regex': "^define.*", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):

@@ -19,7 +19,7 @@ eightBallChoice = ['Vg vf pregnva',
 
 
 def setup():
-    return {'regex': "^8.?ball.*\?", 'act_on_event': 'message'}
+    return {'regex': "^8.?ball.*\?", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):
