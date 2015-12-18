@@ -15,12 +15,12 @@ while len(who_choice) < 50:
     who_choice.append('')
 
 # The user this should act on
-whoUser = "colin"
-whoRegex = "^" + whoUser + ".*"
+who_user = "colin"
+who_regex = "^" + who_user + ".*"
 
 
 def setup():
-    return {'regex': whoRegex, 'act_on_event': 'message', 'cooldown': 2}
+    return {'regex': who_regex, 'act_on_event': 'message', 'cooldown': 2}
 
 
 def run(msg):
