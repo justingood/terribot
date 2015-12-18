@@ -7,4 +7,9 @@ RUN pip install -r requirements.txt
 
 COPY . /app/
 
+RUN useradd -ms /bin/bash terribot && \
+    chown terribot: /app -R
+
+USER terribot
+
 ENTRYPOINT ["python", "terribot.py"]
