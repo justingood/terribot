@@ -1,14 +1,12 @@
 Terribot
 ========
-[![Deployment status from dploy.io](https://dotjustin.dploy.io/badge/23779029942745/15143.png)](http://dploy.io)
-
 A terrible Telegram chat robot.
 
 # Using it
 This is a Python project, so if you're familiar with the language, you're ready to go. It depends on the [tg](https://github.com/vysheng/tg) [Telegram](https://telegram.org/) client, so you'll need that installed as well. tg should be run using the `--json -P 4458` argument. This will allow Terribot to communicate with the client.
 
 ## Docker
-I'm hoping to set this up with [Docker](https://www.docker.com/what-docker). There is a docker-compose file that can get you up and running quickly. However, there is currently an issue with one of the underlying python libraries that causes the CPU to spin out of control.
+This currently runs with [Docker](https://www.docker.com/what-docker). There is a docker-compose file that can get you up and running quickly. However, there is currently an issue on some machines with one of the underlying python libraries that causes the CPU to spin out of control.
 
 For the time being, you can still run the **tg** container in Docker. Currently, the command I'm using to test is:
 `docker run -v $PWD/.telegram-cli:/root/.telegram-cli -v /tmp:/tmp -p 4458:4458 --net=host -it justingood/tg`
