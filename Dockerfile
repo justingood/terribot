@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.5-alpine
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ RUN pip install -r requirements.txt
 
 COPY . /app/
 
-RUN useradd -ms /bin/bash terribot && \
+RUN adduser -D -H terribot && \
     chown terribot: /app -R
 
 USER terribot
