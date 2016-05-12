@@ -23,8 +23,8 @@ class Terribot(object):
 
     def __init__(self):
         signal.signal(signal.SIGTERM, self.sigterm_handler)
-        receiver = Receiver(host='localhost', port=4458)
-        sender = Sender(host='localhost', port=4458)
+        receiver = Receiver(host='tg', port=4458)
+        sender = Sender(host='tg', port=4458)
         receiver.start()
         receiver.message(self.listen(receiver, sender))
         print("Program exiting. Stopped at:", time.strftime("%Y/%m/%d-%H:%M:%S"))
@@ -40,6 +40,7 @@ class Terribot(object):
         try:
             while True:
                 msg = (yield)
+                print(msg)
                 action = self.process(msg)
                 # If an action is necessary, we'll use the send method
                 if action:

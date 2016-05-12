@@ -1,12 +1,19 @@
-tg:
-  image: justingood/tg
-  ports:
-    - "4458:4458"
-  tmpfs: /tmp
-  volumes:
-    - ~/.telegram-cli:/home/telegram/.telegram-cli:ro
+version: '2'
+services:
 
-terribot:
-  build: .
-  links:
-    - tg
+  terribot:
+    build: .
+    depends_on:
+      - tg
+    links:
+      - tg
+    volumes_from:
+      - tg
+
+  tg:
+    image: justingood/tg
+    ports:
+      - "4458:4458"
+    volumes:
+      - $HOME/.telegram-cli:/home/telegram/.telegram-cli
+      - /tmp
