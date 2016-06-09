@@ -1,5 +1,6 @@
 import os
 import sys
+import socket
 import signal
 import time
 import re
@@ -118,5 +119,20 @@ class Terribot(object):
 
 
 if __name__ == '__main__':
+    # Wait for port to be responsive
+    tg_ready = False
+
+    while tg_ready is False:
+      print("Trying to connect to Telegram-CLI...")
+      try:
+        s = socket.create_connection(('tg', 4458), 3)
+        s.close()
+        print("Telegram-CLI is ready for connections")
+        tg_ready = True
+      except socket.error:
+        print("Telegram-CLI isn't ready for connections yet")
+        time.sleep(2)
+        tg_ready = False
+
     # Start the bot
     terribot = Terribot()
