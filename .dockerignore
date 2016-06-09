@@ -3,5 +3,5 @@
 __pycache__
 plugins/__pycache__
 config.ini
-docker-compose
+docker-compose.yml
 Dockerfile
