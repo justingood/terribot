@@ -1,5 +1,6 @@
 import os
 import sys
+import socket
 import signal
 import time
 import re
@@ -23,8 +24,8 @@ class Terribot(object):
 
     def __init__(self):
         signal.signal(signal.SIGTERM, self.sigterm_handler)
-        receiver = Receiver(host='localhost', port=4458)
-        sender = Sender(host='localhost', port=4458)
+        receiver = Receiver(host='tg', port=4458)
+        sender = Sender(host='tg', port=4458)
         receiver.start()
         receiver.message(self.listen(receiver, sender))
         print("Program exiting. Stopped at:", time.strftime("%Y/%m/%d-%H:%M:%S"))
@@ -40,6 +41,7 @@ class Terribot(object):
         try:
             while True:
                 msg = (yield)
+                print(msg)
                 action = self.process(msg)
                 # If an action is necessary, we'll use the send method
                 if action:
@@ -117,5 +119,20 @@ class Terribot(object):
 
 
 if __name__ == '__main__':
+    # Wait for port to be responsive
+    tg_ready = False
+
+    while tg_ready is False:
+      print("Trying to connect to Telegram-CLI...")
+      try:
+        s = socket.create_connection(('tg', 4458), 3)
+        s.close()
+        print("Telegram-CLI is ready for connections")
+        tg_ready = True
+      except socket.error:
+        print("Telegram-CLI isn't ready for connections yet")
+        time.sleep(2)
+        tg_ready = False
+
     # Start the bot
     terribot = Terribot()

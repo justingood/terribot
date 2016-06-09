@@ -12,4 +12,4 @@ RUN adduser -D -H terribot && \
 
 USER terribot
 
-ENTRYPOINT ["python", "terribot.py"]
+CMD ["python", "terribot.py"]
