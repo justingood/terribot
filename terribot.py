@@ -54,12 +54,8 @@ class Terribot(object):
 
     def process(self, msg):
         event_type = msg['event']
-        # If the event type is message, we'll handle it.
-        if msg['event'] == 'message':
-            # if 'media' in msg and not msg['own']:
-            #     # We don't handle media currently
-            #     return None
-            if 'text' in msg and not msg['own']:
+        # If it's a text message and it's not from us, we'll act on it.
+        if msg['event'] == 'message' and 'text' in msg and not msg['own']:
                 # These are standard messages
                 response = self.callplugin(msg, event_type)
                 return response
