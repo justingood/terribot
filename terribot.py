@@ -13,7 +13,7 @@ from tinydb.storages import MemoryStorage
 
 # Plugin data is stored in TinyDB
 plugindb = TinyDB(storage=MemoryStorage)
-Plugins = Query()
+plugins = Query()
 
 # Load all of our plugins and populate our TinyDB with plugin settings.
 loadplugins.do("plugins", globals(), plugindb)
@@ -66,7 +66,7 @@ class Terribot(object):
 
     def callplugin(self, msg, event_type):
         # Grab the list of plugins that can act on our event type
-        pluginlist = plugindb.search(Plugins.act_on_event == event_type)
+        pluginlist = plugindb.search(plugins.act_on_event == event_type)
         # Check if any of them match the regex
         for pluginname in pluginlist:
             if re.match(pluginname['regex'], msg['text'], re.IGNORECASE):
@@ -112,7 +112,7 @@ class Terribot(object):
 
     def cooldown(self, plugin):
         if time.time() - plugin['last_execution'] > plugin['cooldown']:
-            plugindb.update({'last_execution': time.time()}, Plugins.name == plugin['name'])
+            plugindb.update({'last_execution': time.time()}, plugins.name == plugin['name'])
             return True
         else:
             return False
