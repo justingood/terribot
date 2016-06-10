@@ -3,6 +3,9 @@ services:
 
   terribot:
     build: .
+    cpu_shares: 2
+    mem_limit: 32m
+    restart: always
     depends_on:
       - tg
     links:
@@ -12,6 +15,9 @@ services:
 
   tg:
     image: justingood/tg
+    cpu_shares: 2
+    mem_limit: 32m
+    restart: always
     ports:
       - "4458:4458"
     volumes:
