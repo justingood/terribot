@@ -6,12 +6,9 @@ A terrible Telegram chat robot.
 This is a Python project, so if you're familiar with the language, you're ready to go. It depends on the [tg](https://github.com/vysheng/tg) [Telegram](https://telegram.org/) client, so you'll need that installed as well. tg should be run using the `--json -P 4458` argument. This will allow Terribot to communicate with the client.
 
 ## Docker
-This currently runs with [Docker](https://www.docker.com/what-docker). There is a docker-compose file that can get you up and running quickly. However, there is currently an issue on some machines with one of the underlying python libraries that causes the CPU to spin out of control.
+This currently runs with [Docker](https://www.docker.com/what-docker). There is a [docker-compose](https://docs.docker.com/compose/) file that can get you up and running quickly:
 
-For the time being, you can still run the **tg** container in Docker. Currently, the command I'm using to test is:
-`docker run -v $PWD/.telegram-cli:/root/.telegram-cli -v /tmp:/tmp -p 4458:4458 --net=host -it justingood/tg`
-
-I'll revisit this process at a later date to figure out a smoother way of handling it.
+```docker-compose up```
 
 # Developing
 If you want to work on the bot the plugins are probably what you'll want to deal with. Should be fairly straightforward.
@@ -48,3 +45,8 @@ def run(msg):
 
   ## Getting Your Changes Into the Bot
   [Fork](https://help.github.com/articles/fork-a-repo/) the repository to your own account and make your changes locally. Test them by running the bot locally. Then, send a [pull request](https://help.github.com/articles/creating-a-pull-request/) to get your changes merged and deployed.
+
+## Testing
+Docker compose works pretty well for testing changes:
+
+```docker-compose up --build```
