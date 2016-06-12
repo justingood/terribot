@@ -5,12 +5,12 @@ from urimagic import percent_encode
 
 def setup():
     """ Registers frinkiac plugin. """
-    return {'regex': "^frink.*", 'act_on_event': 'message'}
+    return {'regex': "^simpsons\:.*", 'act_on_event': 'message'}
 
 def run(msg):
     """ Returns an image from the frinkiac search engine. """
     image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
-    message = re.match('^(frink) (.*)', msg['text'], re.IGNORECASE)
+    message = re.match('^(simpsons\:) (.*)', msg['text'], re.IGNORECASE)
     searchterm = message.group(2)
 
     searchurl = "https://frinkiac.com/api/search?q=" + percent_encode(searchterm)
