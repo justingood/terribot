@@ -2,3 +2,4 @@ pytg
 tinydb==3.0.0
 requests==2.7.0
 twitter==1.17.1
+urimagic==1.1.0
