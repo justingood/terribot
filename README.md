@@ -5,8 +5,15 @@ A terrible Telegram chat robot.
 # Using it
 This is a Python project, so if you're familiar with the language, you're ready to go. It depends on the [tg](https://github.com/vysheng/tg) [Telegram](https://telegram.org/) client, so you'll need that installed as well. tg should be run using the `--json -P 4458` argument. This will allow Terribot to communicate with the client.
 
+## First-time setup
+The first thing you'll need is to set up the Telegram CLI client. You can do this by running:
+
+```docker run -it -v $HOME/.telegram-cli:/home/telegram/.telegram-cli justingood/tg```
+
+It will prompt you for your account details, and will set up an account for you. The resulting configuration will be saved in `$HOME/.telegram-cli`
+
 ## Docker
-This currently runs with [Docker](https://www.docker.com/what-docker). There is a [docker-compose](https://docs.docker.com/compose/) file that can get you up and running quickly:
+This currently runs with [Docker](https://www.docker.com/what-docker). There is a [docker-compose](https://docs.docker.com/compose/) file that can get the Telegram client and the bot up and running quickly:
 
 ```docker-compose up```
 
