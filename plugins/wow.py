@@ -14,10 +14,12 @@ url = ['http://i.imgur.com/f07DJ1R.png',
 
 
 def setup():
+    """ Registers the wow plugin. """
     return {'regex': "wow", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):
+    """ Returns wow images. """
     image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
     response = requests.get(random.choice(url))
     image.write(response.content)

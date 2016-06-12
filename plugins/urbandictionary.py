@@ -3,10 +3,12 @@ import requests
 
 
 def setup():
+    """ Registers the urbandictionary plugin. """
     return {'regex': "^define.*", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):
+    """ Returns the top definition from the urbandictionary. """
     if len(msg['text'].split()) > 1:
         try:
             searchterm = msg['text'].split(' ', 1)[1]

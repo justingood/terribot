@@ -20,6 +20,7 @@ except:
 
 
 def randomtweet(user):
+    """ Returns a random tweet from a given user. """
     if twitter_enabled:
         return random.choice(api.statuses.user_timeline(count=200, user_id=user))['text']
     else:

@@ -9,10 +9,12 @@ urls = ['https://i.imgur.com/TePrI2O.jpg',
 
 
 def setup():
+    """ Registers the fuckthisshit plugin. """
     return {'regex': ".*fuck this shit.*", 'act_on_event': 'message'}
 
 
 def run(msg):
+    """ Returns a random fuckthisshit image. """
     image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
     response = requests.get(random.choice(urls))
     image.write(response.content)

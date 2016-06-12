@@ -13,10 +13,12 @@ url = ['http://i.imgur.com/WvxdOOL.jpg',
 
 
 def setup():
+    """ Registers the self defense plugin. """
     return {'regex': "fuck.*(off|you).*ED", 'act_on_event': 'message'}
 
 
 def run(msg):
+    """ Returns a random image when ED is insulted. """
     image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
     response = requests.get(random.choice(url))
     image.write(response.content)

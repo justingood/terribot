@@ -15,10 +15,12 @@ except:
 
 
 def setup():
+    """ Registers the google image search plugin. """
     return {'regex': "^image", 'act_on_event': 'message'}
 
 
 def run(msg):
+    """ Returns the first image on google for a given search term. """
     if image_search_enabled:
         image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
         message = re.match('^(image) (.*)', msg['text'], re.IGNORECASE)

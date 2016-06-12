@@ -10,6 +10,7 @@
 #   will provide details on what regular expression (regex) to match in a
 #   user message. When this is matched, the bot will call the run function.
 def setup():
+    """ Registers the example plugin. """
     return {'regex': "^example.*", 'act_on_event': 'message', 'cooldown': 123}
 
 
@@ -19,6 +20,7 @@ def setup():
 #   Literally anything goes. The data that gets returned to the bot will be
 #   a response type and a message. Multiple actions are supported.
 def run(msg):
+    """ Returns the user's message in uppercase. """
     # As an example, we'll use built-in python functions to convert the
     #   message to all uppercase letters.
 

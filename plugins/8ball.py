@@ -19,9 +19,11 @@ eightball_choice = ['Vg vf pregnva',
 
 
 def setup():
+    """ Registers up the 8ball plugin. """
     return {'regex': "^8.?ball.*\?", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):
+    """ Returns the answer to a yes/no question from the magic 8ball. """
     answer = codecs.decode((random.choice(eightball_choice)), 'rot13')
     return ({'action': 'send_msg', 'payload': answer},)
