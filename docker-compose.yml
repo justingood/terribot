@@ -18,8 +18,6 @@ services:
     cpu_shares: 2
     mem_limit: 32m
     restart: always
-    ports:
-      - "4458:4458"
     volumes:
       - $HOME/.telegram-cli:/home/telegram/.telegram-cli
       - /tmp
