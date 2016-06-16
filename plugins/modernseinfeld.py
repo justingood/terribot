@@ -1,5 +1,4 @@
-import helper_twitter
-
+from helpers import twitter
 
 def setup():
     """ Registers the modernseinfeld plugin. """
@@ -9,7 +8,7 @@ def setup():
 def run(msg):
     """ Returns a random tweet from the modernseinfeld account. """
     # Do some twitter stuff
-    result = helper_twitter.randomtweet(1000262514)
+    result = twitter.randomtweet(1000262514)
     if result:
         return ({'action': 'send_msg', 'payload': result},)
     else:
