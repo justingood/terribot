@@ -2,13 +2,11 @@ import tempfile
 import requests
 import configparser
 import re
-
-config = configparser.ConfigParser()
-config.read('config.ini')
+import os
 
 try:
-    key = config.get('google', 'api_key')
-    engine_id = config.get('google', 'engine_id')
+    key = os.environ['GOOGLE_API_KEY']
+    engine_id = os.environ['GOOGLE_ENGINE_ID']
     image_search_enabled = True
 except:
     image_search_enabled = False

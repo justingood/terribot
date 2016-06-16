@@ -1,18 +1,15 @@
 import configparser
 import twitter
 import random
-
-# Load configuration from file
-config = configparser.ConfigParser()
-config.read('config.ini')
+import os
 
 try:
-    token = config.get('twitter', 'token')
-    token_key = config.get('twitter', 'token_key')
-    consecret = config.get('twitter', 'consecret')
-    consecretkey = config.get('twitter', 'consecretkey')
+    token = os.environ['TWITTER_TOKEN']
+    token_secret = os.environ['TWITTER_TOKEN_SECRET']
+    consumer_secret = os.environ['TWITTER_CONSUMER_SECRET']
+    consumer_key = os.environ['TWITTER_CONSUMER_KEY']
 
-    api = twitter.Twitter(auth=twitter.OAuth(token, token_key, consecret, consecretkey))
+    api = twitter.Twitter(auth=twitter.OAuth(token, token_secret, consumer_key, consumer_secret))
     twitter_enabled = True
 
 except:
