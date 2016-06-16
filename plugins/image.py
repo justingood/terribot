@@ -1,6 +1,5 @@
 import tempfile
 import requests
-import configparser
 import re
 import os
 

@@ -1,4 +1,3 @@
-import configparser
 import twitter
 import random
 import os
