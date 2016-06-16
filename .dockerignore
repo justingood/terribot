@@ -5,3 +5,5 @@ plugins/__pycache__
 config.ini
 docker-compose*
 Dockerfile
+README.md
+.gitignore
