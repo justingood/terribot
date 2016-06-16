@@ -2,6 +2,7 @@ version: '2'
 services:
 
   terribot:
+    image: justingood/terribot
     build: .
     cpu_shares: 2
     mem_limit: 32m
