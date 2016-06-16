@@ -1,5 +1,8 @@
 FROM python:3.5-alpine
 
+RUN apk -U add ca-certificates && \
+    rm /var/cache/apk/*
+
 WORKDIR /app
 
 COPY requirements.txt /app/
