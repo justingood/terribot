@@ -17,7 +17,7 @@ services:
   tg:
     image: justingood/tg
     cpu_shares: 2
-    mem_limit: 16m
+    mem_limit: 8m
     restart: always
     volumes:
       - $HOME/.telegram-cli:/home/telegram/.telegram-cli
