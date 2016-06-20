@@ -10,6 +10,7 @@ from pytg.receiver import Receiver
 from pytg.sender import Sender
 from pytg.utils import coroutine
 from tinydb import TinyDB, Query
+from tinydb.storages import MemoryStorage
 
 # Plugin data is stored in TinyDB
 plugindb = TinyDB(storage=MemoryStorage)
