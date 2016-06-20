@@ -4,12 +4,12 @@ import socket
 import signal
 import time
 import re
+import json
 import loadplugins
 from pytg.receiver import Receiver
 from pytg.sender import Sender
 from pytg.utils import coroutine
 from tinydb import TinyDB, Query
-from tinydb.storages import MemoryStorage
 
 # Plugin data is stored in TinyDB
 plugindb = TinyDB(storage=MemoryStorage)
@@ -18,6 +18,12 @@ plugins = Query()
 # Load all of our plugins and populate our TinyDB with plugin settings.
 loadplugins.do("plugins", globals(), plugindb)
 
+# Figure out if we're in debug mode
+try:
+    debug = bool(os.environ['DEBUG'])
+except:
+    debug = False
+    print('Debug flag not set - running in production mode')
 
 class Terribot(object):
     """A terrible Telegram chat bot"""
@@ -42,6 +48,8 @@ class Terribot(object):
             while True:
                 msg = (yield)
                 print(msg)
+                # uncomment for easier-to-read message chunks
+                # print(json.dumps(msg, sort_keys=True, indent=4))
                 action = self.process(msg)
                 # If an action is necessary, we'll use the send method
                 if action:
@@ -54,8 +62,13 @@ class Terribot(object):
 
     def process(self, msg):
         event_type = msg['event']
+        # If it's a text message not from us, and directly to the bot while in debug mode we'll act on it.
+        if msg['event'] == 'message' and 'text' in msg and not msg['own'] and debug is True and msg['peer']['type'] == 'user':
+                # These are standard messages
+                response = self.callplugin(msg, event_type)
+                return response
         # If it's a text message and it's not from us, we'll act on it.
-        if msg['event'] == 'message' and 'text' in msg and not msg['own']:
+        elif msg['event'] == 'message' and 'text' in msg and not msg['own'] and debug is False:
                 # These are standard messages
                 response = self.callplugin(msg, event_type)
                 return response
