@@ -1,6 +1,7 @@
 import tempfile
 import requests
 import re
+import json
 from urimagic import percent_encode
 
 def setup():
@@ -12,10 +13,11 @@ def run(msg):
     image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
     message = re.match('^(simpsons\:) (.*)', msg['text'], re.IGNORECASE)
     searchterm = message.group(2)
-
     searchurl = "https://frinkiac.com/api/search?q=" + percent_encode(searchterm)
+
     # Return first result...might want to make this configurable.
     searchresult = requests.get(searchurl).json()[0]
+    print("SEARCHRESULT: ", searchresult)
     imageurl = "https://frinkiac.com/meme/" + searchresult['Episode'] + "/" + str(searchresult['Timestamp']) + ".jpg"
 
     print("Downloading & sending image: ", imageurl)
@@ -23,4 +25,15 @@ def run(msg):
     image.write(response.content)
     image.close()
     print('')
-    return ({'action': 'send_photo', 'payload': image.name},)
+
+    # Initialize the first return value tuple with the image itself - we'll add the subtitles after
+    results = ({'action': 'send_photo', 'payload': image.name},)
+
+    # Grab the captions and append them to the tuple
+    captionurl = "https://frinkiac.com/api/caption?e=" + searchresult['Episode'] + "&t=" + str(searchresult['Timestamp'])
+    captions = requests.get(captionurl)
+    for subtitle in captions.json()['Subtitles']:
+        results = results + ({'action': 'send_msg', 'payload': subtitle['Content']},)
+
+    # Return our image and the associated captions
+    return results
