@@ -4,13 +4,14 @@ import socket
 import signal
 import time
 import re
-import json
 import loadplugins
 from pytg.receiver import Receiver
 from pytg.sender import Sender
 from pytg.utils import coroutine
 from tinydb import TinyDB, Query
 from tinydb.storages import MemoryStorage
+# Used to format the messages when debugging
+# import json
 
 # Plugin data is stored in TinyDB
 plugindb = TinyDB(storage=MemoryStorage)
@@ -19,12 +20,13 @@ plugins = Query()
 # Load all of our plugins and populate our TinyDB with plugin settings.
 loadplugins.do("plugins", globals(), plugindb)
 
-# Figure out if we're in debug mode
+# Figure out if we're in production mode
 try:
-    debug = bool(os.environ['DEBUG'])
+    location = str(os.environ['ENV'])
 except:
-    debug = False
-    print('Debug flag not set - running in production mode')
+    location = 'development'
+    print('location not defined - setting development mode')
+
 
 class Terribot(object):
     """A terrible Telegram chat bot"""
@@ -49,7 +51,7 @@ class Terribot(object):
             while True:
                 msg = (yield)
                 print(msg)
-                # uncomment for easier-to-read message chunks
+                # uncomment for easier-to-read messages
                 # print(json.dumps(msg, sort_keys=True, indent=4))
                 action = self.process(msg)
                 # If an action is necessary, we'll use the send method
@@ -63,13 +65,15 @@ class Terribot(object):
 
     def process(self, msg):
         event_type = msg['event']
-        # If it's a text message not from us, and directly to the bot while in debug mode we'll act on it.
-        if msg['event'] == 'message' and 'text' in msg and not msg['own'] and debug is True and msg['peer']['type'] == 'user':
+        # Dev mode should only respond to messages directly to the bot
+        # If it's a message, containing text, not from the bot, the mode is not production, and it's in a p2p chat, it should be acted on.
+        if msg['event'] == 'message' and 'text' in msg and not msg['own'] and location != 'production' and msg['peer']['type'] == 'user':
                 # These are standard messages
                 response = self.callplugin(msg, event_type)
                 return response
+        # Production mode should only respond to chat messages. This might be changed at a a later time.
         # If it's a text message and it's not from us, we'll act on it.
-        elif msg['event'] == 'message' and 'text' in msg and not msg['own'] and debug is False:
+        elif msg['event'] == 'message' and 'text' in msg and not msg['own'] and location == 'production' and msg['peer']['type'] == 'chat':
                 # These are standard messages
                 response = self.callplugin(msg, event_type)
                 return response
@@ -133,16 +137,17 @@ if __name__ == '__main__':
     tg_ready = False
 
     while tg_ready is False:
-      print("Trying to connect to Telegram-CLI...")
-      try:
-        s = socket.create_connection(('tg', 4458), 3)
-        s.close()
-        print("Telegram-CLI is ready for connections")
-        tg_ready = True
-      except socket.error:
-        print("Telegram-CLI isn't ready for connections yet")
-        time.sleep(2)
-        tg_ready = False
+        print("Trying to connect to Telegram-CLI...")
+
+        try:
+            s = socket.create_connection(('tg', 4458), 3)
+            s.close()
+            print("Telegram-CLI is ready for connections")
+            tg_ready = True
+        except socket.error:
+            print("Telegram-CLI isn't ready for connections yet")
+            time.sleep(2)
+            tg_ready = False
 
     # Start the bot
     terribot = Terribot()
