@@ -57,12 +57,12 @@ beer_types= ['Altbier',
 			'Weizenbock']
 
 # We'll pad this with extra empty data so we only sporadically comment
-while len(who_choice) < 200:
+while len(beer_types) < 200:
     beer_types.append('')
 
 def setup():
     #Registers the beertypes plugin.
-    return {'regex': "^.{0,150}", 'act_on_event': 'message', 'cooldown': 1}
+    return {'regex': "^.{0,75}", 'act_on_event': 'message', 'cooldown': 1}
 
 
 def run(msg):
