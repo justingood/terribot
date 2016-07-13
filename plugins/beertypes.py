@@ -1,6 +1,6 @@
 import random
 
-beer_types= ['Altbier',
+beer_types = ['Altbier',
             'Düsseldorf Altbier',
             'Amber ale',
             'Barley wine',
@@ -60,18 +60,19 @@ beer_types= ['Altbier',
 while len(beer_types) < 200:
     beer_types.append('')
 
+
 def setup():
-    #Registers the beertypes plugin.
+    # Registers the beertypes plugin.
     return {'regex': "^.{0,75}", 'act_on_event': 'message', 'cooldown': 1}
 
 
 def run(msg):
-    #Chooses beer type
+    # Chooses beer type
     beer_type = (random.choice(beer_types))
-    #If beer type is blank option (sporadic comment logic)
+    # If beer type is blank option (sporadic comment logic)
     if beer_type == '':
         return ()
     else:
-        #Responds with message plus beer name type
+        # Responds with message plus beer name type
         answer = msg['text'] + ' ' + beer_type
     return ({'action': 'send_msg', 'payload': answer},)
