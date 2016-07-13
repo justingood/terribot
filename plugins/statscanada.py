@@ -1,5 +1,6 @@
 from helpers import twitter
 
+
 def setup():
     """ Registers the statscanada plugin. """
     return {'regex': "stats canada", 'act_on_event': 'message'}

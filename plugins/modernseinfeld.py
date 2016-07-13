@@ -1,5 +1,6 @@
 from helpers import twitter
 
+
 def setup():
     """ Registers the modernseinfeld plugin. """
     return {'regex': "modern seinfeld", 'act_on_event': 'message'}
