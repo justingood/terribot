@@ -57,7 +57,7 @@ beer_types = ['Altbier',
             'Weizenbock']
 
 # We'll pad this with extra empty data so we only sporadically comment
-while len(beer_types) < 200:
+while len(beer_types) < 2000:
     beer_types.append('')
 
 
