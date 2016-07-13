@@ -73,5 +73,5 @@ def run(msg):
         return ()
     else:
         #Responds with message plus beer name type
-        answer = msg + ' ' + beer_type
+        answer = msg['text'] + ' ' + beer_type
     return ({'action': 'send_msg', 'payload': answer},)
