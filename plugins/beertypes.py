@@ -1,5 +1,15 @@
 import random
 
+beer_frequency = 0.05  # e.g. the percentage of matching messages turned into beer
+
+beer_pattern = r'''(?x) # sets verbose flag
+^       # match the beginning of the string
+\s*     # ignore any leading whitespace
+.{1,75} # match messages of 1 to 75 characters in length
+\s*     # ignore any trailing whitespace
+$       # match the end of the string
+'''
+
 beer_types = ['Altbier',
             'Düsseldorf Altbier',
             'Amber ale',
@@ -56,23 +66,19 @@ beer_types = ['Altbier',
             'Weissbier',
             'Weizenbock']
 
-# We'll pad this with extra empty data so we only sporadically comment
-while len(beer_types) < 2000:
-    beer_types.append('')
-
 
 def setup():
     # Registers the beertypes plugin.
-    return {'regex': "^.{0,75}", 'act_on_event': 'message', 'cooldown': 1}
+    return {'regex': beer_pattern, 'act_on_event': 'message', 'cooldown': 1}
 
 
 def run(msg):
-    # Chooses beer type
-    beer_type = (random.choice(beer_types))
-    # If beer type is blank option (sporadic comment logic)
-    if beer_type == '':
-        return ()
-    else:
+    if random.random() < beer_frequency:
+        # Chooses beer type
+        beer_type = (random.choice(beer_types))
         # Responds with message plus beer name type
         answer = msg['text'] + ' ' + beer_type
-    return ({'action': 'send_msg', 'payload': answer},)
+        return ({'action': 'send_msg', 'payload': answer},)
+    else:
+        # No beer this time
+        return ()
