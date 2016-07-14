@@ -1,6 +1,6 @@
 import random
 
-beer_frequency = 0.05 # e.g. the percentage of matching messages turned into beer
+beer_frequency = 0.05  # e.g. the percentage of matching messages turned into beer
 
 beer_pattern = r'''(?x) # sets verbose flag
 ^       # match the beginning of the string
