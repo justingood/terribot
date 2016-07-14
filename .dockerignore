@@ -7,3 +7,4 @@ docker-compose*
 Dockerfile
 README.md
 .gitignore
+.travis.yml
