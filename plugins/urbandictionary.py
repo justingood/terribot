@@ -1,4 +1,3 @@
-import json
 import requests
 
 
@@ -17,12 +16,12 @@ def run(msg):
             response = requests.get(searchurl)
             result = response.json()
 
-            word = json.dumps(result['list'][0]['word'])
-            definition = json.dumps(result['list'][0]['definition'])
-            example = json.dumps(result['list'][0]['example'])
+            word = result['list'][0]['word']
+            definition = result['list'][0]['definition']
+            example = result['list'][0]['example']
 
-            definitionresult = str(word) + ": " + str(definition)
-            exampleresult = "example: " + str(example)
+            definitionresult = word + ": " + definition
+            exampleresult = "example: " + example
 
             definition_to_send = {'action': 'send_msg', 'payload': definitionresult}
             example_to_send = {'action': 'send_msg', 'payload': exampleresult}
