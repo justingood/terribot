@@ -16,5 +16,5 @@ def setup():
 
 def run(msg):
     """ Returns a pong to a user's ping. """
-    reply = re.sub(ping_pattern, r'\1ong', msg['text'])
+    reply = re.sub(ping_pattern, r'\1ong', msg['text'], re.IGNORECASE)
     return ({'action': 'send_msg', 'payload': reply},)
