@@ -5,7 +5,7 @@ beer_frequency = 0.05  # e.g. the percentage of matching messages turned into be
 beer_pattern = r'''(?x) # sets verbose flag
 ^       # match the beginning of the string
 \s*     # ignore any leading whitespace
-.{1,75} # match messages of 1 to 75 characters in length
+.{2,75} # match messages of 2 to 75 characters in length
 \s*     # ignore any trailing whitespace
 $       # match the end of the string
 '''
