@@ -1,10 +1,9 @@
 .python-version
 .telegram-cli
-__pycache__
-plugins/__pycache__
+*__pycache__*
 config.ini
 docker-compose*
 Dockerfile
 README.md
-.gitignore
+.git*
 .travis.yml
