@@ -13,9 +13,11 @@ from tinydb.storages import MemoryStorage
 # Used to format the messages when debugging
 # import json
 
-# Plugin data is stored in TinyDB
+# Plugin & cooldown data is stored in TinyDB
 plugindb = TinyDB(storage=MemoryStorage)
 plugins = Query()
+cooldowndb = TinyDB(storage=MemoryStorage)
+cooldowns = Query()
 
 # Load all of our plugins and populate our TinyDB with plugin settings.
 loadplugins.do("plugins", globals(), plugindb)
@@ -85,7 +87,7 @@ class Terribot(object):
         for pluginname in pluginlist:
             if re.match(pluginname['regex'], msg['text'], re.IGNORECASE):
                 # Make sure we're not being too ambitious
-                if self.cooldown(pluginname):
+                if self.cooldown(pluginname, msg['peer']['peer_id']):
                     # When it matches, call the run function in the plugin
                     function = globals()[pluginname['name']]
                     try:
@@ -124,12 +126,27 @@ class Terribot(object):
     def send_typing(self, sender, peer):
         sender.send_typing(peer)
 
-    def cooldown(self, plugin):
-        if time.time() - plugin['last_execution'] > plugin['cooldown']:
-            plugindb.update({'last_execution': time.time()}, plugins.name == plugin['name'])
-            return True
+    def cooldown(self, plugin, peer_id):
+        # First, use a get() from TinyDB 'to see if a cooldown entry exists for the plugin in this channel(peer_id)
+        #    It will helpfully return None if it does not exist
+        cooldownrecord = cooldowndb.get((cooldowns.peer_id == peer_id) & (cooldowns.name == plugin['name']))
+
+        # If the record exists
+        if cooldownrecord:
+            # If the cooldown has elapsed
+            if time.time() - cooldownrecord['last_execution'] > plugin['cooldown']:
+                # This plugin is safe to run - it's past the cooldown period. We're going to update() the record via the TinyDB 'eid' for next time.
+                cooldowndb.update({'last_execution': time.time()}, eids=[cooldownrecord.eid])
+                return True
+            # Otherwise, the cooldown has NOT elapsed, so the plugin is not allowed to run.
+            else:
+                return False
+        # If the record does not exist yet, we'll allow it to run, and create a cooldown record for next time.
         else:
-            return False
+            cooldowndb.insert({'name': plugin['name'],
+                               'peer_id': peer_id,
+                               'last_execution': time.time()})
+            return True
 
 
 if __name__ == '__main__':

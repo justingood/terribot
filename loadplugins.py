@@ -6,7 +6,6 @@
 import os
 import re
 import sys
-import time
 
 # ------------------------------------------------------------------------------
 # Interface
@@ -58,5 +57,4 @@ def __do(path, env, plugindb):
         plugindb.insert({'name': module_name,
                          'act_on_event': pluginspecs['act_on_event'],
                          'regex': pluginspecs['regex'],
-                         'last_execution': (time.time() - 300),
                          'cooldown': pluginspecs['cooldown']})
