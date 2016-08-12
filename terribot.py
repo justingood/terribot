@@ -42,7 +42,8 @@ class Terribot(object):
         print("Program exiting. Stopped at:", time.strftime("%Y/%m/%d-%H:%M:%S"))
         receiver.stop()
 
-    def sigterm_handler(self, signum, frame):
+    @staticmethod
+    def sigterm_handler(signum, frame):
         print("Received stop signal. Shutting down.")
         sys.exit(0)
 
@@ -109,13 +110,15 @@ class Terribot(object):
             if message['action'] == 'send_photo':
                 self.send_photo(sender, send_to, message['payload'])
 
-    def send_msg(self, sender, send_to, payload):
+    @staticmethod
+    def send_msg(sender, send_to, payload):
         try:
             sender.msg(send_to, payload)
         except (NoResponse, ConnectionError) as e:   # NOQA
             print('Oops, had a connectivity problem while sending: ', send_to, payload, e)
 
-    def send_photo(self, sender, send_to, filename):
+    @staticmethod
+    def send_photo(sender, send_to, filename):
         try:
             sender.send_file(send_to, filename)
         except (NoResponse, ConnectionError) as e:   # NOQA
@@ -123,10 +126,12 @@ class Terribot(object):
         time.sleep(0.2)
         os.remove(filename)
 
-    def send_typing(self, sender, peer):
+    @staticmethod
+    def send_typing(sender, peer):
         sender.send_typing(peer)
 
-    def cooldown(self, plugin, peer_id):
+    @staticmethod
+    def cooldown(plugin, peer_id):
         # First, use a get() from TinyDB 'to see if a cooldown entry exists for the plugin in this channel(peer_id)
         #    It will helpfully return None if it does not exist
         cooldownrecord = cooldowndb.get((cooldowns.peer_id == peer_id) & (cooldowns.name == plugin['name']))
