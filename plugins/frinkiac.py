@@ -1,7 +1,6 @@
-import tempfile
 import requests
 import re
-from urimagic import percent_encode
+from helpers import image
 
 
 def setup():
@@ -11,10 +10,9 @@ def setup():
 
 def run(msg):
     """ Returns an image from the frinkiac search engine. """
-    image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
     message = re.match('^(simpsons\:) (.*)', msg['text'], re.IGNORECASE)
     searchterm = message.group(2)
-    searchurl = "https://frinkiac.com/api/search?q=" + percent_encode(searchterm)
+    searchurl = "https://frinkiac.com/api/search?q=" + searchterm
 
     # Return first result...might want to make this configurable.
     searchresult = requests.get(searchurl).json()[0]
@@ -22,13 +20,11 @@ def run(msg):
     imageurl = "https://frinkiac.com/meme/" + searchresult['Episode'] + "/" + str(searchresult['Timestamp']) + ".jpg"
 
     print("Downloading & sending image: ", imageurl)
-    response = requests.get(imageurl)
-    image.write(response.content)
-    image.close()
     print('')
+    frinkiac_image = image.download(imageurl)
 
     # Initialize the first return value tuple with the image itself - we'll add the subtitles after
-    results = ({'action': 'send_photo', 'payload': image.name},)
+    results = ({'action': 'send_photo', 'payload': frinkiac_image},)
 
     # Grab the captions and append them to the tuple
     captionurl = "https://frinkiac.com/api/caption?e=" + searchresult['Episode'] + "&t=" + str(searchresult['Timestamp'])

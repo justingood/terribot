@@ -1,7 +1,7 @@
-import tempfile
 import requests
 import re
 import os
+from helpers import image
 
 try:
     key = os.environ['GOOGLE_API_KEY']
@@ -19,7 +19,6 @@ def setup():
 def run(msg):
     """ Returns the first image on google for a given search term. """
     if image_search_enabled:
-        image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
         message = re.match('^(image) (.*)', msg['text'], re.IGNORECASE)
         searchterm = message.group(2)
         print("Image search for: ", searchterm)
@@ -27,10 +26,9 @@ def run(msg):
         searchresults = requests.get(searchurl)
         imageurl = searchresults.json()['items'][0]['link']
         print("Downloading & sending image: ", imageurl)
-        response = requests.get(imageurl)
-        image.write(response.content)
-        image.close()
         print('')
-        return ({'action': 'send_photo', 'payload': image.name},)
+        search_image = image.download(imageurl)
+
+        return ({'action': 'send_photo', 'payload': search_image},)
     else:
         return ({'action': 'send_msg', 'payload': "Image search is not enabled."},)

@@ -1,5 +1,4 @@
-import tempfile
-import requests
+from helpers import image
 
 
 def setup():
@@ -9,8 +8,6 @@ def setup():
 
 def run(msg):
     """ Returns a scary image when talking about a diet. """
-    image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
-    response = requests.get('http://i.imgur.com/kZQDGNn.png')
-    image.write(response.content)
-    image.close()
-    return ({'action': 'send_photo', 'payload': image.name},)
+    diet_image = image.download('http://i.imgur.com/kZQDGNn.png')
+
+    return ({'action': 'send_photo', 'payload': diet_image},)

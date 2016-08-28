@@ -1,5 +1,4 @@
-import tempfile
-import requests
+from helpers import image
 
 
 def setup():
@@ -9,8 +8,6 @@ def setup():
 
 def run(msg):
     """ Returns an image appropriate for a dog danglin afternoon. """
-    image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
-    response = requests.get('http://i.imgur.com/KwVcdsL.png')
-    image.write(response.content)
-    image.close()
-    return ({'action': 'send_photo', 'payload': image.name},)
+    dogdanglin_image = image.download('http://i.imgur.com/KwVcdsL.png')
+
+    return ({'action': 'send_photo', 'payload': dogdanglin_image},)
