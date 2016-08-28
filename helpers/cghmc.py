@@ -4,17 +4,24 @@ import requests
 from helpers import image
 
 
-def frinkiac(searchterm):
+def search(site, searchterm, number=1, animated=False):
     """ Searches frinkiac for a given search string and returns a dictionary including the image & captions """
+    if site == 'frinkiac':
+        siteurl = "https://frinkiac.com"
+    elif site == 'morbotron':
+        siteurl = "https://morbotron.com"
+    else:
+        print("CGHMC failed. You need to choose Frinkiac or Morbotron as the site")
 
-    searchurl = "https://frinkiac.com/api/search?q=" + searchterm
-    # Return first result...might want to make this configurable.
-    searchresult = requests.get(searchurl).json()[0]
-    imageurl = "https://frinkiac.com/meme/" + searchresult['Episode'] + "/" + str(searchresult['Timestamp']) + ".jpg"
+    searchurl = siteurl + "/api/search?q=" + searchterm
+    # Return specific result number (subract one because it's zero-indexed)
+    result_number = int(number) - 1
+    searchresult = requests.get(searchurl).json()[result_number]
+    imageurl = siteurl + "/meme/" + searchresult['Episode'] + "/" + str(searchresult['Timestamp']) + ".jpg"
     frinkiac_static_image = image.download(imageurl)
 
     # Grab the captions and append them to the tuple
-    captionurl = "https://frinkiac.com/api/caption?e=" + searchresult['Episode'] + "&t=" + str(searchresult['Timestamp'])
+    captionurl = siteurl + "/api/caption?e=" + searchresult['Episode'] + "&t=" + str(searchresult['Timestamp'])
     captions = requests.get(captionurl)
 
     # Create dictionary with results to return
