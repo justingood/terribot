@@ -10,8 +10,19 @@ def setup():
 
 
 def run(msg):
-    """ Returns an image from the frinkiac search engine. """
-    message = re.match('(^futurama|^futurama animated)\:(.*) ([0-9]*)', msg['text'], re.IGNORECASE)
+    """ Returns an image from the morbotron search engine. """
+    
+    futurama_pattern = r'''(?ix)
+    ^       # start of string
+    (futurama|futurama animated):   # command, colon
+    \s*     # optional space
+    (.*?)   # search term (non-greedy match to allow for optional number)
+    \s*     # optional space
+    ([0-9]+)?   # optional number
+    \s*     # optional space
+    $       # end of string
+    '''
+    message = re.match(futurama_pattern, msg['text'], re.IGNORECASE)
     searchtype = message.group(1)
     searchterm = message.group(2)
     result_num = message.group(3)
