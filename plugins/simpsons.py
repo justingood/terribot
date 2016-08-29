@@ -15,6 +15,8 @@ def run(msg):
     searchtype = message.group(1)
     searchterm = message.group(2)
     result_num = message.group(3)
+    if not result_num:
+        result_num = 1
 
     # Get search results from cghmc helper
     if searchtype.lower() == 'simpsons':
