@@ -11,7 +11,18 @@ def setup():
 
 def run(msg):
     """ Returns an image from the frinkiac search engine. """
-    message = re.match('(^simpsons||^simpsons animated)\:(.*) ([0-9]*)', msg['text'], re.IGNORECASE)
+
+    simpsons_pattern = r'''(?ix)
+    ^       # start of string
+    (simpsons|simpsons animated):   # command, colon
+    \s*     # optional space
+    (.*?)   # search term (non-greedy match to allow for optional number)
+    \s*     # optional space
+    ([0-9]+)?   # optional number
+    \s*     # optional space
+    $       # end of string
+    '''
+    message = re.match(simpsons_pattern, msg['text'], re.IGNORECASE)
     searchtype = message.group(1)
     searchterm = message.group(2)
     result_num = message.group(3)
