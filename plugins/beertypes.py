@@ -1,11 +1,11 @@
 import random
 
-beer_frequency = 0.02  # e.g. the percentage of matching messages turned into beer
+beer_frequency = 0.05  # e.g. the percentage of matching messages turned into beer
 
 beer_pattern = r'''(?x) # sets verbose flag
 ^       # match the beginning of the string
 \s*     # ignore any leading whitespace
-.{2,75} # match messages of 2 to 75 characters in length
+.{1,75} # match messages of 1 to 75 characters in length
 \s*     # ignore any trailing whitespace
 $       # match the end of the string
 '''
