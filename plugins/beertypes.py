@@ -69,7 +69,7 @@ beer_types = ['Altbier',
 
 def setup():
     # Registers the beertypes plugin.
-    return {'regex': beer_pattern, 'act_on_event': 'message', 'cooldown': 1}
+    return {'regex': beer_pattern, 'act_on_event': 'message', 'cooldown': 0}
 
 
 def run(msg):
