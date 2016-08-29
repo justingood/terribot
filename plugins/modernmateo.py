@@ -12,7 +12,7 @@ except:
 
 def setup():
     """ Registers the modern mateo plugin. """
-    return {'regex': "^modern mateo", 'act_on_event': 'message'}
+    return {'regex': "^modern mateo\s*$", 'act_on_event': 'message'}
 
 
 def run(msg):
