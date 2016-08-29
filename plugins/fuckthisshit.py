@@ -1,6 +1,4 @@
-import tempfile
-import random
-import requests
+from helpers import image
 
 urls = ['https://i.imgur.com/TePrI2O.jpg',
         'http://i.imgur.com/LjdgV8V.png',
@@ -15,8 +13,6 @@ def setup():
 
 def run(msg):
     """ Returns a random fuckthisshit image. """
-    image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
-    response = requests.get(random.choice(urls))
-    image.write(response.content)
-    image.close()
-    return ({'action': 'send_photo', 'payload': image.name},)
+    fuckthis_result = image.download(urls)
+
+    return ({'action': 'send_photo', 'payload': fuckthis_result},)

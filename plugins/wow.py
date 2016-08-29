@@ -1,6 +1,4 @@
-import tempfile
-import random
-import requests
+from helpers import image
 
 url = ['http://i.imgur.com/f07DJ1R.png',
        'http://i.imgur.com/yXAnrTi.jpg',
@@ -20,8 +18,6 @@ def setup():
 
 def run(msg):
     """ Returns wow images. """
-    image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
-    response = requests.get(random.choice(url))
-    image.write(response.content)
-    image.close()
-    return ({'action': 'send_photo', 'payload': image.name},)
+    wow_image = image.download(url)
+
+    return ({'action': 'send_photo', 'payload': wow_image},)

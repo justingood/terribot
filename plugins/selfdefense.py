@@ -1,6 +1,4 @@
-import tempfile
-import random
-import requests
+from helpers import image
 
 url = ['http://i.imgur.com/WvxdOOL.jpg',
        'http://i.imgur.com/cqC5Tpu.jpg',
@@ -19,8 +17,6 @@ def setup():
 
 def run(msg):
     """ Returns a random image when ED is insulted. """
-    image = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
-    response = requests.get(random.choice(url))
-    image.write(response.content)
-    image.close()
-    return ({'action': 'send_photo', 'payload': image.name},)
+    selfdefense_image = image.download(url)
+
+    return ({'action': 'send_photo', 'payload': selfdefense_image},)
