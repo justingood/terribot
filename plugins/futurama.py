@@ -11,7 +11,7 @@ def setup():
 
 def run(msg):
     """ Returns an image from the morbotron search engine. """
-    
+
     futurama_pattern = r'''(?ix)
     ^       # start of string
     (futurama|futurama animated):   # command, colon
