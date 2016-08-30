@@ -38,4 +38,3 @@ def run(msg):
     """ Returns the answer to a yes/no question from the magic 8ball. """
     answer = codecs.decode(random.choice(eightball_choice), 'rot13')
     return ({'action': 'send_msg', 'payload': answer},)
-
