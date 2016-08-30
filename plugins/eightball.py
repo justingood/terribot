@@ -1,6 +1,17 @@
 import codecs
 import random
 
+
+eightball_pattern = r'''(?ix)
+^           # start of string
+(8.?ball)   # command
+\s+         # some white-space
+(.*\?)      # question
+\s*         # optional white-space
+$           # end of string
+'''
+
+
 eightball_choice = ['Vg vf pregnva',
                     'Vg vf qrpvqrqyl fb',
                     'Jvgubhg n qbhog',
@@ -20,10 +31,10 @@ eightball_choice = ['Vg vf pregnva',
 
 def setup():
     """ Registers up the 8ball plugin. """
-    return {'regex': "^8.?ball.*\?", 'act_on_event': 'message', 'cooldown': 10}
+    return {'regex': eightball_pattern, 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):
     """ Returns the answer to a yes/no question from the magic 8ball. """
-    answer = codecs.decode((random.choice(eightball_choice)), 'rot13')
+    answer = codecs.decode(random.choice(eightball_choice), 'rot13')
     return ({'action': 'send_msg', 'payload': answer},)
