@@ -1,0 +1,7 @@
+[flake8]
+ignore = E128, E402, F403, E501
+#  E128: continuation line under-indented
+#  E402: module level import not at top of file
+#  F403: wildcard module imports
+#  E501: Line length > 80 characters
+show-source = True
