@@ -14,7 +14,7 @@ def run(msg):
 
     futurama_pattern = r'''(?ix)
     ^       # start of string
-    (futurama|futurama animated):   # command, colon
+    (futurama|futurama\ animated):   # command, colon
     \s*     # optional space
     (.*?)   # search term (non-greedy match to allow for optional number)
     \s*     # optional space
