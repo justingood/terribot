@@ -1,3 +1,5 @@
+""" this is a module docstring """
+
 import re
 import unittest
 
