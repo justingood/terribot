@@ -14,7 +14,7 @@ def run(msg):
 
     simpsons_pattern = r'''(?ix)
     ^       # start of string
-    (simpsons|simpsons animated):   # command, colon
+    (simpsons|simpsons\ animated):   # command, colon
     \s*     # optional space
     (.*?)   # search term (non-greedy match to allow for optional number)
     \s*     # optional space
