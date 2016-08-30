@@ -17,14 +17,20 @@ def search(site, searchterm, number=1, animated=False):
     # Return specific result number (subract one because it's zero-indexed)
     result_number = int(number) - 1
     searchresult = requests.get(searchurl).json()[result_number]
-    imageurl = siteurl + "/meme/" + searchresult['Episode'] + "/" + str(searchresult['Timestamp']) + ".jpg"
-    frinkiac_static_image = image.download(imageurl)
+
+    if animated:
+        # Create & send a 2 second GIF
+        imageurl = siteurl + "/gif/" + searchresult['Episode'] + "/" + str(searchresult['Timestamp']) + "/" + str(int(searchresult['Timestamp']) + 2000) + ".gif"
+        frinkiac_image = image.download(imageurl, '.gif')
+    elif not animated:
+        imageurl = siteurl + "/meme/" + searchresult['Episode'] + "/" + str(searchresult['Timestamp']) + ".jpg"
+        frinkiac_image = image.download(imageurl)
 
     # Grab the captions and append them to the tuple
     captionurl = siteurl + "/api/caption?e=" + searchresult['Episode'] + "&t=" + str(searchresult['Timestamp'])
     captions = requests.get(captionurl)
 
     # Create dictionary with results to return
-    packed_result = {'image': frinkiac_static_image, 'captions': captions}
+    packed_result = {'image': frinkiac_image, 'captions': captions}
 
     return packed_result
