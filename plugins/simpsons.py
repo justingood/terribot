@@ -31,16 +31,16 @@ def run(msg):
 
     # Get search results from cghmc helper
     if searchtype.lower() == 'simpsons':
-        cghmc_result = cghmc.search('frinkiac', searchterm, result_num, False)
-    elif searchtype.lower() == 'simpsons anmiated':
-        cghmc_result = cghmc.search('frinkiac', searchterm, result_num, True)
+        frink_result = cghmc.search('frinkiac', searchterm, result_num, False)
+    elif searchtype.lower() == 'simpsons animated':
+        frink_result = cghmc.search('frinkiac', searchterm, result_num, True)
     else:
-        print("Error, you shouldn't be here.")
+        print("According to the gas chromatograph, the secret ingredient is...Love?! Who's been screwing with this thing?")
 
     # Initialize the first return value tuple with the image itself - we'll add the subtitles after
-    results = ({'action': 'send_photo', 'payload': cghmc_result['image']},)
+    results = ({'action': 'send_photo', 'payload': frink_result['image']},)
 
-    for subtitle in cghmc_result['captions'].json()['Subtitles']:
+    for subtitle in frink_result['captions'].json()['Subtitles']:
         results = results + ({'action': 'send_msg', 'payload': subtitle['Content']},)
 
     # Return our image and the associated captions
