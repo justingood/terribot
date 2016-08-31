@@ -104,7 +104,7 @@ class Terribot(object):
 
     def send(self, sender, send_to, senddata):
         # Unpack the tuples and process
-        for index, message in enumerate(senddata):
+        for message in senddata:
             if message['action'] == 'send_msg':
                 self.send_msg(sender, send_to, message['payload'])
             if message['action'] == 'send_photo':
