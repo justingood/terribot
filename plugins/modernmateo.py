@@ -6,7 +6,7 @@ try:
     # MODERN_MATEO_ID should be a Google Sheets ID
     mateo_id = os.environ['MODERN_MATEO_ID']
     modern_mateo_enabled = True
-except:
+except KeyError:
     modern_mateo_enabled = False
 
 
