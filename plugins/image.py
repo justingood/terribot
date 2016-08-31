@@ -7,7 +7,7 @@ try:
     key = os.environ['GOOGLE_API_KEY']
     engine_id = os.environ['GOOGLE_ENGINE_ID']
     image_search_enabled = True
-except:
+except KeyError:
     image_search_enabled = False
 
 
