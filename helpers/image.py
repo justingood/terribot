@@ -1,4 +1,4 @@
-""" Provides helper functions for image operations """
+"""Provide helper functions for image operations."""
 
 import tempfile
 import random
@@ -6,7 +6,10 @@ import requests
 
 
 def download(url, suffix='.png'):
-    """ This helper will download and return an image from a URL (or a random image if given a list of URLs). It will return the filename to be passed to tg-cli """
+    """Download an internet image to a local file.
+
+    This helper will download and return an image from a URL (or a random image if given a list of URLs). It will return the filename to be passed to tg-cli.
+    """
     image = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
     if isinstance(url, list):
         response = requests.get(random.choice(url))

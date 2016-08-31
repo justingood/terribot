@@ -1,15 +1,15 @@
-""" Modern Seinfeld tweets on demand. """
+"""Retreive a Modern Seinfeld tweet."""
 
 from helpers import twitter
 
 
 def setup():
-    """ Registers the modernseinfeld plugin. """
+    """Register the modernseinfeld plugin."""
     return {'regex': "modern seinfeld", 'act_on_event': 'message'}
 
 
 def run(msg):
-    """ Returns a random tweet from the modernseinfeld account. """
+    """Return a random tweet from the modernseinfeld account."""
     # Do some twitter stuff
     result = twitter.randomtweet(1000262514)
     if result:

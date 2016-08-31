@@ -1,4 +1,5 @@
-""" Imma just grab my stuff and leave. """
+"""For when you've just had enough."""
+
 from helpers import image
 
 urls = ['https://i.imgur.com/TePrI2O.jpg',
@@ -8,12 +9,12 @@ urls = ['https://i.imgur.com/TePrI2O.jpg',
 
 
 def setup():
-    """ Registers the fuckthisshit plugin. """
+    """Register the fuckthisshit plugin."""
     return {'regex': ".*fuck this shit.*", 'act_on_event': 'message'}
 
 
 def run(msg):
-    """ Returns a random fuckthisshit image. """
+    """Return a random fuckthisshit image."""
     fuckthis_result = image.download(urls)
 
     return ({'action': 'send_photo', 'payload': fuckthis_result},)

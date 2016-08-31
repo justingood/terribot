@@ -1,4 +1,4 @@
-""" Terribot, a terrible Telegram chat bot.  """
+"""Terribot, a terrible Telegram chat bot."""
 import os
 import sys
 import socket
@@ -32,10 +32,10 @@ except KeyError:
 
 
 class Terribot(object):
-    """A terrible Telegram chat bot"""
+    """A terrible Telegram chat bot."""
 
     def __init__(self):
-        """ Create receiver and sender for communicating with PyTG. """
+        """Create receiver and sender for communicating with PyTG."""
         signal.signal(signal.SIGTERM, self.sigterm_handler)
         receiver = Receiver(host='tg', port=4458)
         sender = Sender(host='tg', port=4458)
@@ -46,13 +46,13 @@ class Terribot(object):
 
     @staticmethod
     def sigterm_handler(signum, frame):
-        """ Shut down once SIGTERM received. """
+        """Shut down once SIGTERM received."""
         print("Received stop signal. Shutting down.")
         sys.exit(0)
 
     @coroutine
     def listen(self, receiver, sender):
-        """ Listen for messages from PyTG and process them. """
+        """Listen for messages from PyTG and process them."""
         print("Started, and waiting for messages at:", time.strftime("%Y/%m/%d %H:%M:%S"))
         try:
             while True:
@@ -71,7 +71,7 @@ class Terribot(object):
             print("Keyboard kill received. Exiting.")
 
     def process(self, msg):
-        """ XXX """
+        """TODO."""
         event_type = msg['event']
         # Dev mode should only respond to messages directly to the bot
         # If it's a message, containing text, not from the bot, the mode is not production, and it's in a p2p chat, it should be acted on.
@@ -87,7 +87,7 @@ class Terribot(object):
                 return response
 
     def callplugin(self, msg, event_type):
-        """ XXX """
+        """TODO."""
         # Grab the list of plugins that can act on our event type
         pluginlist = plugindb.search(plugins.act_on_event == event_type)
         # Check if any of them match the regex
@@ -109,7 +109,7 @@ class Terribot(object):
         return None
 
     def send(self, sender, send_to, senddata):
-        """ XXX """
+        """TODO."""
         # Unpack the tuples and process
         for message in senddata:
             if message['action'] == 'send_msg':
@@ -119,7 +119,7 @@ class Terribot(object):
 
     @staticmethod
     def send_msg(sender, send_to, payload):
-        """ XXX """
+        """TODO."""
         try:
             sender.msg(send_to, payload)
         except (NoResponse, ConnectionError) as e:   # NOQA
@@ -127,7 +127,7 @@ class Terribot(object):
 
     @staticmethod
     def send_photo(sender, send_to, filename):
-        """ XXX """
+        """TODO."""
         try:
             sender.send_file(send_to, filename)
         except (NoResponse, ConnectionError) as e:   # NOQA
@@ -137,12 +137,12 @@ class Terribot(object):
 
     @staticmethod
     def send_typing(sender, peer):
-        """ XXX """
+        """TODO."""
         sender.send_typing(peer)
 
     @staticmethod
     def cooldown(plugin, peer_id):
-        """ XXX """
+        """TODO."""
         # First, use a get() from TinyDB 'to see if a cooldown entry exists for the plugin in this channel(peer_id)
         #    It will helpfully return None if it does not exist
         cooldownrecord = cooldowndb.get((cooldowns.peer_id == peer_id) & (cooldowns.name == plugin['name']))

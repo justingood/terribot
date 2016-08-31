@@ -1,4 +1,5 @@
-""" Who is this stranger-person, really? """
+"""Ask about missing persons."""
+
 import codecs
 import random
 
@@ -21,12 +22,12 @@ who_regex = "^" + who_user + ".*"
 
 
 def setup():
-    """ Registers the who plugin. """
+    """Register the who plugin."""
     return {'regex': who_regex, 'act_on_event': 'message', 'cooldown': 2}
 
 
 def run(msg):
-    """ Returns confusion about users that ED would love to meet. """
+    """Return confusion about users that ED would love to meet."""
     string = codecs.decode((random.choice(who_choice)), 'rot13')
     if string == '':
         return ()

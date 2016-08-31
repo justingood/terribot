@@ -1,4 +1,4 @@
-""" An attempt to protect terribot from the inevitable abuse. """
+"""An attempt to protect terribot from the inevitable abuse."""
 
 from helpers import image
 
@@ -13,12 +13,12 @@ url = ['http://i.imgur.com/WvxdOOL.jpg',
 
 
 def setup():
-    """ Registers the self defense plugin. """
+    """Register the self defense plugin."""
     return {'regex': "fuck.*(off|you).*ED", 'act_on_event': 'message'}
 
 
 def run(msg):
-    """ Returns a random image when ED is insulted. """
+    """Return a random image when ED is insulted."""
     selfdefense_image = image.download(url)
 
     return ({'action': 'send_photo', 'payload': selfdefense_image},)

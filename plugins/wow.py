@@ -1,4 +1,4 @@
-""" Such cool. Much amaze. So sarcasm. Wow. """
+"""Such cool. Much amaze. So sarcasm. Wow."""
 
 from helpers import image
 
@@ -14,12 +14,12 @@ url = ['http://i.imgur.com/f07DJ1R.png',
 
 
 def setup():
-    """ Registers the wow plugin. """
+    """Register the wow plugin."""
     return {'regex': "wow", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):
-    """ Returns wow images. """
+    """Return wow images."""
     wow_image = image.download(url)
 
     return ({'action': 'send_photo', 'payload': wow_image},)

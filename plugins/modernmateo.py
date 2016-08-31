@@ -1,4 +1,7 @@
-""" Glimpses into the everyday goings on of our friend Mateo. """
+"""Retreive a Modern Mateo plot.
+
+Pieces written in the style of Modern Seinfeld about Mateo and his friends.
+"""
 
 import os
 from helpers import google_sheets
@@ -13,12 +16,12 @@ except KeyError:
 
 
 def setup():
-    """ Registers the modern mateo plugin. """
+    """Register the modern mateo plugin."""
     return {'regex': "^modern mateo\s*$", 'act_on_event': 'message'}
 
 
 def run(msg):
-    """ Returns a random Modern Mateo episode. """
+    """Return a random Modern Mateo episode."""
     if modern_mateo_enabled:
         awesome_mateo_plot = google_sheets.random_line(mateo_id)
         if awesome_mateo_plot:

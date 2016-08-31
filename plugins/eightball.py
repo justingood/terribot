@@ -1,5 +1,5 @@
-""" Ask the Magic Eightball! """
-""" NB: ambiguous replies removed. """
+"""Get an answer from the Magic Eightball."""
+"""NB: will not return an ambiguous reply."""
 
 import codecs
 import random
@@ -33,11 +33,11 @@ eightball_choice = ['Vg vf pregnva',
 
 
 def setup():
-    """ Registers up the 8ball plugin. """
+    """Register up the 8ball plugin."""
     return {'regex': eightball_pattern, 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):
-    """ Returns the answer to a yes/no question from the magic 8ball. """
+    """Return the answer to a yes/no question from the magic 8ball."""
     answer = codecs.decode(random.choice(eightball_choice), 'rot13')
     return ({'action': 'send_msg', 'payload': answer},)
