@@ -27,7 +27,7 @@ def run(msg):
             example_to_send = {'action': 'send_msg', 'payload': exampleresult}
 
             return (definition_to_send, example_to_send)
-        except:
+        except Exception:
             return ({'action': 'send_msg', 'payload': "Your guess is as good as mine..."},)
     else:
         return ()
