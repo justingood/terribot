@@ -71,9 +71,9 @@ class Terribot(object):
         # Dev mode should only respond to messages directly to the bot
         # If it's a message, containing text, not from the bot, the mode is not production, and it's in a p2p chat, it should be acted on.
         if msg['event'] == 'message' and 'text' in msg and not msg['own'] and location != 'production' and msg['peer']['type'] == 'user':
-                # These are standard messages
-                response = self.callplugin(msg, event_type)
-                return response
+            # These are standard messages
+            response = self.callplugin(msg, event_type)
+            return response
         # Production mode should only respond to chat messages. This might be changed at a a later time.
         # If it's a text message and it's not from us, we'll act on it.
         elif msg['event'] == 'message' and 'text' in msg and not msg['own'] and location == 'production' and msg['peer']['type'] == 'chat':
