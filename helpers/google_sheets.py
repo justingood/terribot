@@ -5,7 +5,7 @@ import random
 try:
     api_key = os.environ['GOOGLE_API_KEY']
     sheets_enabled = True
-except:
+except KeyError:
     sheets_enabled = False
 
 
