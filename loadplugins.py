@@ -1,7 +1,5 @@
-# ------------------------------------------------------------------------------
-# Originally code from: http://gitlab.com/aurelien-lourot/importdir
-# Extended to treat modules more like plugins.
-# ------------------------------------------------------------------------------
+""" Originally code from: http://gitlab.com/aurelien-lourot/importdir """
+""" Extended to treat modules more like plugins. """
 
 import os
 import re

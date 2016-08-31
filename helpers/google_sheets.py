@@ -1,3 +1,4 @@
+""" Common methods for interacting with Google Sheets. """
 import os
 import requests
 import random

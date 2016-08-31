@@ -1,3 +1,5 @@
+""" An attempt to protect terribot from the inevitable abuse. """
+
 from helpers import image
 
 url = ['http://i.imgur.com/WvxdOOL.jpg',

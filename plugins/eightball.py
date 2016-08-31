@@ -1,3 +1,6 @@
+""" Ask the Magic Eightball! """
+""" NB: ambiguous replies removed. """
+
 import codecs
 import random
 

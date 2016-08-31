@@ -1,3 +1,5 @@
+""" Such cool. Much amaze. So sarcasm. Wow. """
+
 from helpers import image
 
 url = ['http://i.imgur.com/f07DJ1R.png',

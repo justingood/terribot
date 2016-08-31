@@ -1,3 +1,4 @@
+""" Homer Simpson's greatest fear? """
 from helpers import image
 
 

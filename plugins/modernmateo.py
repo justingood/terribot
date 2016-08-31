@@ -1,3 +1,5 @@
+""" Glimpses into the everyday goings on of our friend Mateo. """
+
 import os
 from helpers import google_sheets
 
@@ -16,7 +18,7 @@ def setup():
 
 
 def run(msg):
-    """ Returns the first image on google for a given search term. """
+    """ Returns a random Modern Mateo episode. """
     if modern_mateo_enabled:
         awesome_mateo_plot = google_sheets.random_line(mateo_id)
         if awesome_mateo_plot:

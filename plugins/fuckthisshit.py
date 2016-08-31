@@ -1,3 +1,4 @@
+""" Imma just grab my stuff and leave. """
 from helpers import image
 
 urls = ['https://i.imgur.com/TePrI2O.jpg',

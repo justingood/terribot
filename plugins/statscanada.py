@@ -1,3 +1,5 @@
+""" 100% true facts about Canada """
+
 from helpers import twitter
 
 

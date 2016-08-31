@@ -1,3 +1,4 @@
+""" Who is this stranger-person, really? """
 import codecs
 import random
 

@@ -1,3 +1,5 @@
+""" Deciphering the unknown with the help of urbandictionary.com """
+
 import requests
 
 

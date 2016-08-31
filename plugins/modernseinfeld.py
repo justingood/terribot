@@ -1,3 +1,5 @@
+""" Modern Seinfeld tweets on demand. """
+
 from helpers import twitter
 
 
