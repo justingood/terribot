@@ -11,6 +11,7 @@ try:
     api = twitter.Twitter(auth=twitter.OAuth(token, token_secret, consumer_key, consumer_secret))
     twitter_enabled = True
 
+except Exception:
     twitter_enabled = False
 
 
