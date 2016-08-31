@@ -1,3 +1,4 @@
+""" The main application logic for terribot.  """
 import os
 import sys
 import socket
@@ -25,7 +26,7 @@ loadplugins.do("plugins", globals(), plugindb)
 # Figure out if we're in production mode
 try:
     location = str(os.environ['ENV'])
-except:
+except KeyError:
     location = 'development'
     print('location not defined - setting development mode')
 
