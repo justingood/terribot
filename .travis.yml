@@ -6,10 +6,8 @@ python:
 install:
   - pip install -r requirements.txt
   - pip install flake8
+  - pip install nose2
 
-# Flake8 tests. We ignore the following rules:
-#  E128: continuation line under-indented
-#  E402: module level import not at top of file
-#  F403: wildcard module imports
-#  E501: Line length > 80 characters
-script: flake8 --ignore=E128,E402,F403,E501 --show-source *.py helpers plugins
+script:
+  - flake8
+  - nose2
