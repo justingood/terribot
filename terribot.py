@@ -82,9 +82,9 @@ class Terribot(object):
         # Production mode should only respond to chat messages. This might be changed at a a later time.
         # If it's a text message and it's not from us, we'll act on it.
         elif msg['event'] == 'message' and 'text' in msg and not msg['own'] and location == 'production' and msg['peer']['type'] == 'chat':
-                # These are standard messages
-                response = self.callplugin(msg, event_type)
-                return response
+            # These are standard messages
+            response = self.callplugin(msg, event_type)
+            return response
 
     def callplugin(self, msg, event_type):
         """Go through the list of plugins and check if they can handle the message."""
@@ -99,7 +99,7 @@ class Terribot(object):
                     function = globals()[pluginname['name']]
                     try:
                         pluginresult = getattr(function, 'run')(msg)
-                    except:
+                    except Exception:
                         print("Error with ", pluginname, ": ", pluginresult)
                     if pluginresult:
                         return pluginresult
