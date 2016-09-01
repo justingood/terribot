@@ -1,15 +1,16 @@
+"""Terribot, a terrible Telegram chat bot."""
 import os
-import sys
-import socket
-import signal
-import time
 import re
-import loadplugins
+import signal
+import socket
+import sys
+import time
 from pytg.receiver import Receiver
 from pytg.sender import Sender
 from pytg.utils import coroutine
-from tinydb import TinyDB, Query
+from tinydb import Query, TinyDB
 from tinydb.storages import MemoryStorage
+import loadplugins
 # Used to format the messages when debugging
 # import json
 
@@ -25,15 +26,16 @@ loadplugins.do("plugins", globals(), plugindb)
 # Figure out if we're in production mode
 try:
     location = str(os.environ['ENV'])
-except:
+except KeyError:
     location = 'development'
     print('location not defined - setting development mode')
 
 
 class Terribot(object):
-    """A terrible Telegram chat bot"""
+    """A terrible Telegram chat bot."""
 
     def __init__(self):
+        """Create receiver and sender for communicating with PyTG."""
         signal.signal(signal.SIGTERM, self.sigterm_handler)
         receiver = Receiver(host='tg', port=4458)
         sender = Sender(host='tg', port=4458)
@@ -44,11 +46,13 @@ class Terribot(object):
 
     @staticmethod
     def sigterm_handler(signum, frame):
+        """Shut down once SIGTERM received."""
         print("Received stop signal. Shutting down.")
         sys.exit(0)
 
     @coroutine
     def listen(self, receiver, sender):
+        """Listen for messages from PyTG and process them."""
         print("Started, and waiting for messages at:", time.strftime("%Y/%m/%d %H:%M:%S"))
         try:
             while True:
@@ -67,13 +71,14 @@ class Terribot(object):
             print("Keyboard kill received. Exiting.")
 
     def process(self, msg):
+        """Filter out the messages which need to be acted upon and do so."""
         event_type = msg['event']
         # Dev mode should only respond to messages directly to the bot
         # If it's a message, containing text, not from the bot, the mode is not production, and it's in a p2p chat, it should be acted on.
         if msg['event'] == 'message' and 'text' in msg and not msg['own'] and location != 'production' and msg['peer']['type'] == 'user':
-                # These are standard messages
-                response = self.callplugin(msg, event_type)
-                return response
+            # These are standard messages
+            response = self.callplugin(msg, event_type)
+            return response
         # Production mode should only respond to chat messages. This might be changed at a a later time.
         # If it's a text message and it's not from us, we'll act on it.
         elif msg['event'] == 'message' and 'text' in msg and not msg['own'] and location == 'production' and msg['peer']['type'] == 'chat':
@@ -82,6 +87,7 @@ class Terribot(object):
                 return response
 
     def callplugin(self, msg, event_type):
+        """Go through the list of plugins and check if they can handle the message."""
         # Grab the list of plugins that can act on our event type
         pluginlist = plugindb.search(plugins.act_on_event == event_type)
         # Check if any of them match the regex
@@ -103,8 +109,9 @@ class Terribot(object):
         return None
 
     def send(self, sender, send_to, senddata):
+        """Take the output from a plugin and dispatch it to the relevant sending method."""
         # Unpack the tuples and process
-        for index, message in enumerate(senddata):
+        for message in senddata:
             if message['action'] == 'send_msg':
                 self.send_msg(sender, send_to, message['payload'])
             if message['action'] == 'send_photo':
@@ -112,6 +119,7 @@ class Terribot(object):
 
     @staticmethod
     def send_msg(sender, send_to, payload):
+        """Send a text message through PyTG."""
         try:
             sender.msg(send_to, payload)
         except (NoResponse, ConnectionError) as e:   # NOQA
@@ -119,6 +127,7 @@ class Terribot(object):
 
     @staticmethod
     def send_photo(sender, send_to, filename):
+        """Send an image message through PyTG."""
         try:
             sender.send_file(send_to, filename)
         except (NoResponse, ConnectionError) as e:   # NOQA
@@ -128,10 +137,15 @@ class Terribot(object):
 
     @staticmethod
     def send_typing(sender, peer):
+        """Signal that we're about to send something.
+
+        This shows up to users in Telegram as "$NAME is typing...".
+        """
         sender.send_typing(peer)
 
     @staticmethod
     def cooldown(plugin, peer_id):
+        """Try to prevent overuse and abuse of terribot plugins."""
         # First, use a get() from TinyDB 'to see if a cooldown entry exists for the plugin in this channel(peer_id)
         #    It will helpfully return None if it does not exist
         cooldownrecord = cooldowndb.get((cooldowns.peer_id == peer_id) & (cooldowns.name == plugin['name']))

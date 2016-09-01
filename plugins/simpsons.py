@@ -1,17 +1,16 @@
-""" Searches for results on Frinkiac via the cghmc helper """
+"""Search for results on Frinkiac via the cghmc helper."""
 
 import re
 from helpers import cghmc
 
 
 def setup():
-    """ Registers frinkiac plugin. """
+    """Register frinkiac plugin."""
     return {'regex': '(^simpsons|^simpsons animated)\:', 'act_on_event': 'message'}
 
 
 def run(msg):
-    """ Returns an image from the frinkiac search engine. """
-
+    """Return an image from the frinkiac search engine."""
     simpsons_pattern = r'''(?ix)
     ^       # start of string
     (simpsons|simpsons\ animated):   # command, colon

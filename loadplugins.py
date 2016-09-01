@@ -1,7 +1,4 @@
-# ------------------------------------------------------------------------------
-# Originally code from: http://gitlab.com/aurelien-lourot/importdir
-# Extended to treat modules more like plugins.
-# ------------------------------------------------------------------------------
+"""Originally code from: http://gitlab.com/aurelien-lourot/importdir. Extended to treat modules more like plugins."""
 
 import os
 import re
@@ -13,9 +10,9 @@ import sys
 
 
 def do(path, env, plugindb):
-    """ Imports all modules residing directly in directory "path" into the
-        provided environment (usually the callers environment). A typical call:
-        importdir.do("example_dir", globals())
+    """Import all modules residing directly in directory "path" into the provided environment (usually the callers environment).
+
+    A typical call: importdir.do("example_dir", globals())
     """
     __do(path, env, plugindb)
 
@@ -28,8 +25,7 @@ __module_file_regexp = "(.+)\.py(c?)$"
 
 
 def __get_module_names_in_dir(path):
-    """ Returns a set of all module names residing directly in directory "path".
-    """
+    """Return a set of all module names residing directly in directory "path"."""
     result = set()
 
     # Looks for all python files in the directory (not recursively)
@@ -43,8 +39,7 @@ def __get_module_names_in_dir(path):
 
 
 def __do(path, env, plugindb):
-    """ Implements do().
-    """
+    """Implement do()."""
     sys.path.append(path)  # adds provided directory to list we can import from
     for module_name in sorted(__get_module_names_in_dir(path)):
         plugin = env[module_name] = __import__(module_name)

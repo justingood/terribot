@@ -1,11 +1,11 @@
-""" Searches sites on a cghmc site (Frinkiac/Morbotron) and returns images and quotes """
+"""Search sites on a cghmc site (Frinkiac/Morbotron) and returns images and quotes."""
 
 import requests
 from helpers import image
 
 
 def search(site, searchterm, number=1, animated=False):
-    """ Searches frinkiac for a given search string and returns a dictionary including the image & captions """
+    """Search a cghmc site for a given search string and returns a dictionary including the image & captions."""
     if site == 'frinkiac':
         siteurl = "https://frinkiac.com"
     elif site == 'morbotron':
