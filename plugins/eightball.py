@@ -1,5 +1,7 @@
-"""Get an answer from the Magic Eightball."""
-"""NB: will not return an ambiguous reply."""
+"""Get an answer from the Magic Eightball.
+
+NB: will not return an ambiguous reply.
+"""
 
 import codecs
 import random
