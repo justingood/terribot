@@ -1,7 +1,8 @@
 """Provide common methods for interacting with Google Sheets."""
+
 import os
-import requests
 import random
+import requests
 
 try:
     api_key = os.environ['GOOGLE_API_KEY']

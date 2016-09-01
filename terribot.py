@@ -1,16 +1,16 @@
 """Terribot, a terrible Telegram chat bot."""
 import os
-import sys
-import socket
-import signal
-import time
 import re
-import loadplugins
+import signal
+import socket
+import sys
+import time
 from pytg.receiver import Receiver
 from pytg.sender import Sender
 from pytg.utils import coroutine
-from tinydb import TinyDB, Query
+from tinydb import Query, TinyDB
 from tinydb.storages import MemoryStorage
+import loadplugins
 # Used to format the messages when debugging
 # import json
 

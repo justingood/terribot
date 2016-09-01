@@ -1,8 +1,8 @@
 """Retreive a Google Image Search result."""
 
-import requests
-import re
 import os
+import re
+import requests
 from helpers import image
 
 try:

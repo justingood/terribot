@@ -1,7 +1,7 @@
 """Provide helper functions for image operations."""
 
-import tempfile
 import random
+import tempfile
 import requests
 
 

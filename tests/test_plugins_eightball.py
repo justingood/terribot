@@ -1,11 +1,9 @@
 """Testing for eightball.py plugin."""
 
 import re
-import unittest
-
 import sys
+import unittest
 sys.path.insert(0, '..')
-
 from plugins.eightball import eightball_pattern
 
 

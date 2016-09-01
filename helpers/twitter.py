@@ -1,8 +1,8 @@
 """Provide helper methods for interacting with Twitter."""
 
-import twitter
-import random
 import os
+import random
+import twitter
 
 try:
     token = os.environ['TWITTER_TOKEN']

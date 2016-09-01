@@ -1,7 +1,7 @@
 """Retreive a cat fact on demand."""
 
-import requests
 import json
+import requests
 
 
 def setup():
