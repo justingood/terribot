@@ -1,6 +1,8 @@
-import twitter
-import random
+"""Provide helper methods for interacting with Twitter."""
+
 import os
+import random
+import twitter
 
 try:
     token = os.environ['TWITTER_TOKEN']
@@ -11,12 +13,12 @@ try:
     api = twitter.Twitter(auth=twitter.OAuth(token, token_secret, consumer_key, consumer_secret))
     twitter_enabled = True
 
-except:
+except Exception:
     twitter_enabled = False
 
 
 def randomtweet(user):
-    """ Returns a random tweet from a given user. """
+    """Return a random tweet from a given user."""
     if twitter_enabled:
         return random.choice(api.statuses.user_timeline(count=200, user_id=user))['text']
     else:

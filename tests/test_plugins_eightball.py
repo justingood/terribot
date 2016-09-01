@@ -1,19 +1,20 @@
-""" this is a module docstring """
+"""Testing for eightball.py plugin."""
 
 import re
-import unittest
-
 import sys
+import unittest
 sys.path.insert(0, '..')
-
 from plugins.eightball import eightball_pattern
 
 
 class TestEightBall(unittest.TestCase):
-    """ Testing for plugin eightball.py """
+    """Testing for eightball.py plugin."""
+
     def test_pattern_positive(self):
-        """ positive matches
-        confirm that things we want to match the regex indeed match """
+        """Expected matches.
+
+        Confirm that things we want to match the regex indeed match
+        """
         positives = {
             '8ball shoud I?': ('8ball', 'shoud I?'),
             '8ball could you? ': ('8ball', 'could you?'),
@@ -29,8 +30,10 @@ class TestEightBall(unittest.TestCase):
                 self.assertEqual(m.groups(), positives[test])
 
     def test_pattern_negative(self):
-        """ negative matches
-        confirm that things we don't want to match the regex don't """
+        """Expected non-matches.
+
+        Confirm that things we don't want to match the regex don't
+        """
         negatives = [
             ' 8ball shoud I?',
             '8ball could you ',

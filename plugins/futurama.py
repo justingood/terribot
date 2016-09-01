@@ -1,17 +1,16 @@
-""" Searches for results on Morbotron via the cghmc helper """
+"""Search for results on Morbotron via the cghmc helper."""
 
 import re
 from helpers import cghmc
 
 
 def setup():
-    """ Registers frinkiac plugin. """
+    """Register frinkiac plugin."""
     return {'regex': '(^futurama|^futurama animated)\:', 'act_on_event': 'message'}
 
 
 def run(msg):
-    """ Returns an image from the morbotron search engine. """
-
+    """Return an image from the morbotron search engine."""
     futurama_pattern = r'''(?ix)
     ^       # start of string
     (futurama|futurama\ animated):   # command, colon

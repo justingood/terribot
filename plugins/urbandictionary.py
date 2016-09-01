@@ -1,13 +1,15 @@
+"""Decipher the unknown with the help of Urban Dictionary."""
+
 import requests
 
 
 def setup():
-    """ Registers the urbandictionary plugin. """
+    """Register the urbandictionary plugin."""
     return {'regex': "^define.*", 'act_on_event': 'message', 'cooldown': 10}
 
 
 def run(msg):
-    """ Returns the top definition from the urbandictionary. """
+    """Return the top definition from the urbandictionary."""
     if len(msg['text'].split()) > 1:
         try:
             searchterm = msg['text'].split(' ', 1)[1]
@@ -27,7 +29,7 @@ def run(msg):
             example_to_send = {'action': 'send_msg', 'payload': exampleresult}
 
             return (definition_to_send, example_to_send)
-        except:
+        except Exception:
             return ({'action': 'send_msg', 'payload': "Your guess is as good as mine..."},)
     else:
         return ()
