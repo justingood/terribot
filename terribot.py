@@ -99,7 +99,7 @@ class Terribot(object):
                     function = globals()[pluginname['name']]
                     try:
                         pluginresult = getattr(function, 'run')(msg)
-                    except:
+                    except Exception:
                         print("Error with ", pluginname, ": ", pluginresult)
                     if pluginresult:
                         return pluginresult
