@@ -71,7 +71,7 @@ class Terribot(object):
             print("Keyboard kill received. Exiting.")
 
     def process(self, msg):
-        """TODO."""
+        """Filter out the messages which need to be acted upon and do so."""
         event_type = msg['event']
         # Dev mode should only respond to messages directly to the bot
         # If it's a message, containing text, not from the bot, the mode is not production, and it's in a p2p chat, it should be acted on.
@@ -87,7 +87,7 @@ class Terribot(object):
                 return response
 
     def callplugin(self, msg, event_type):
-        """TODO."""
+        """Go through the list of plugins and check if they can handle the message."""
         # Grab the list of plugins that can act on our event type
         pluginlist = plugindb.search(plugins.act_on_event == event_type)
         # Check if any of them match the regex
@@ -109,7 +109,7 @@ class Terribot(object):
         return None
 
     def send(self, sender, send_to, senddata):
-        """TODO."""
+        """Take the output from a plugin and dispatch it to the relevant sending method."""
         # Unpack the tuples and process
         for message in senddata:
             if message['action'] == 'send_msg':
@@ -119,7 +119,7 @@ class Terribot(object):
 
     @staticmethod
     def send_msg(sender, send_to, payload):
-        """TODO."""
+        """Send a text message through PyTG."""
         try:
             sender.msg(send_to, payload)
         except (NoResponse, ConnectionError) as e:   # NOQA
@@ -127,7 +127,7 @@ class Terribot(object):
 
     @staticmethod
     def send_photo(sender, send_to, filename):
-        """TODO."""
+        """Send an image message through PyTG."""
         try:
             sender.send_file(send_to, filename)
         except (NoResponse, ConnectionError) as e:   # NOQA
@@ -137,12 +137,15 @@ class Terribot(object):
 
     @staticmethod
     def send_typing(sender, peer):
-        """TODO."""
+        """Signal that we're about to send something.
+
+        This shows up to users in Telegram as "$NAME is typing...".
+        """
         sender.send_typing(peer)
 
     @staticmethod
     def cooldown(plugin, peer_id):
-        """TODO."""
+        """Try to prevent overuse and abuse of terribot plugins."""
         # First, use a get() from TinyDB 'to see if a cooldown entry exists for the plugin in this channel(peer_id)
         #    It will helpfully return None if it does not exist
         cooldownrecord = cooldowndb.get((cooldowns.peer_id == peer_id) & (cooldowns.name == plugin['name']))
